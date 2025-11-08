@@ -1,0 +1,3175 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برنامه مدیریت مطالعه</title>
+    <!-- تم و مانیفست PWA -->
+    <meta name="theme-color" content="#10A37F"/>
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,{
+        &quot;name&quot;: &quot;برنامه مدیریت مطالعه&quot;,
+        &quot;short_name&quot;: &quot;مدیریت مطالعه&quot;,
+        &quot;start_url&quot;: &quot;.&quot;,
+        &quot;display&quot;: &quot;standalone&quot;,
+        &quot;background_color&quot;: &quot;#212121&quot;,
+        &quot;theme_color&quot;: &quot;#10A37F&quot;,
+        &quot;description&quot;: &quot;ابزاری برای مدیریت و پایش زمان مطالعه و تست.&quot;,
+        &quot;icons&quot;: [
+            { &quot;src&quot;: &quot;https://cdn-icons-png.flaticon.com/128/3176/3176298.png&quot;, &quot;type&quot;: &quot;image/png&quot;, &quot;sizes&quot;: &quot;128x128&quot; },
+            { &quot;src&quot;: &quot;https://cdn-icons-png.flaticon.com/192/3176/3176298.png&quot;, &quot;type&quot;: &quot;image/png&quot;, &quot;sizes&quot;: &quot;192x192&quot; },
+            { &quot;src&quot;: &quot;https://cdn-icons-png.flaticon.com/512/3176/3176298.png&quot;, &quot;type&quot;: &quot;image/png&quot;, &quot;sizes&quot;: &quot;512x512&quot; }
+        ]
+    }">
+    <!-- فونت -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- استایل‌های CSS -->
+    <style>
+        html {
+            font-size: 12px;
+        }
+
+        :root {
+            --primary-color: #10A37F;
+            --primary-color-hover: #0c8763;
+            --primary-color-rgb: 16, 163, 127;
+            
+            /* متغیرهای رنگی نمودار */
+            --chart-color-1: #10A37F; /* Primary */
+            --chart-color-2: #3498db; /* Blue */
+            --chart-color-3: #e74c3c; /* Red */
+            --chart-color-4: #f1c40f; /* Yellow */
+            --chart-color-5: #9b59b6; /* Purple */
+            --chart-color-6: #e67e22; /* Orange */
+        }
+
+        :root {
+            /* Dark Mode (Default) */
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #2a2a2a;
+            --bg-sidebar: #181818;
+            --bg-input: #333333;
+            --bg-btn-primary: var(--primary-color);
+            --bg-btn-primary-hover: var(--primary-color-hover);
+            --bg-btn-secondary: #444444;
+            --bg-btn-secondary-hover: #55576a;
+            --bg-sidebar-item-hover: #2A2A2A;
+            --bg-sidebar-item-active: var(--primary-color);
+            --scrollbar-thumb: #3a3a3a;
+            --scrollbar-thumb-hover: #4a4a4a;
+            
+            --text-primary: #E0E0E0;
+            --text-secondary: #A0A0A0;
+            --text-title: #FFFFFF;
+            --text-btn-primary: #FFFFFF;
+            
+            --border-primary: #333333;
+            --border-focus: var(--primary-color);
+            --border-card: #333333;
+
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);
+            
+            --color-positive: #28a745;
+            --color-negative: #dc3545;
+        }
+
+        .light-mode {
+            /* Light Mode */
+            --bg-primary: #F0F2F5;
+            --bg-secondary: #FFFFFF;
+            --bg-sidebar: #FFFFFF;
+            --bg-input: #FFFFFF;
+            --bg-btn-primary: var(--primary-color);
+            --bg-btn-primary-hover: var(--primary-color-hover);
+            --bg-btn-secondary: #E0E0E0;
+            --bg-btn-secondary-hover: #D0D0D0;
+            --bg-sidebar-item-hover: #F0F0F0;
+            --bg-sidebar-item-active: var(--primary-color);
+            --scrollbar-thumb: #c1c1c1;
+            --scrollbar-thumb-hover: #a8a8a8;
+
+            --text-primary: #202123;
+            --text-secondary: #6E6E80;
+            --text-title: #000000;
+            --text-btn-primary: #FFFFFF;
+            
+            --border-primary: #E5E5E5;
+            --border-focus: var(--primary-color);
+            --border-card: #E5E5E5;
+
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+            
+            --color-positive: #1f8237;
+            --color-negative: #c82333;
+        }
+
+        /* Custom Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 0.5rem;
+            height: 0.5rem;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--scrollbar-thumb);
+            border-radius: 0.6rem;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--scrollbar-thumb-hover);
+        }
+
+        /* Styles for Overall Stats Component */
+        @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .animated-bg-style { background: linear-gradient(-45deg, #181818, #2a2a2a, #101010, #3c3c3c); background-size: 400% 400%; animation: gradient-animation 15s ease infinite; border-radius: 1.25rem; box-shadow: 0 8px 25px rgba(0,0,0,0.25); }
+        .light-mode .animated-bg-style { background: linear-gradient(-45deg, #f0f2f5, #ffffff, #e8eaed, #f0f2f5); box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: var(--text-primary); }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            text-align: right;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+        }
+
+        #app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: var(--bg-sidebar);
+            color: var(--text-primary);
+            padding: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: background-color 0.3s, color 0.3s, width 0.3s ease-in-out;
+            border-left: 1px solid var(--border-primary);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.7rem;
+            padding: 0.7rem 0.3rem;
+            height: 2rem;
+        }
+
+        .sidebar-title {
+            color: var(--text-title);
+            margin: 0;
+            font-size: 1.25rem;
+            transition: opacity 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 1.4rem 0.7rem 0.7rem 0.7rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            opacity: 0.1;
+            transition: opacity 0.3s ease;
+        }
+        
+        .sidebar-footer:hover {
+            opacity: 0.5;
+        }
+
+        .sidebar-item {
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.4rem;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            white-space: nowrap;
+        }
+        
+        .sidebar-item-icon {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+        .sidebar-item.active .sidebar-item-icon {
+            color: var(--text-btn-primary);
+        }
+
+        .sidebar-item-label {
+            transition: opacity 0.2s ease;
+        }
+
+        .sidebar-item:hover {
+            background-color: var(--bg-sidebar-item-hover);
+            color: var(--text-title);
+        }
+        
+        .sidebar-item.active {
+            background-color: var(--bg-sidebar-item-active);
+            color: var(--text-btn-primary);
+        }
+        
+        .sidebar-item.active:hover {
+            color: var(--text-btn-primary);
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background-color: var(--border-primary);
+            margin: 1rem 0;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            color: var(--primary-color);
+            margin-bottom: 1.7rem;
+            font-size: 1.9rem;
+            text-align: center;
+        }
+        
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.7rem;
+            margin-top: 1.7rem;
+        }
+        
+        .home-grid-full-width {
+             grid-template-columns: 1fr;
+        }
+        
+        .card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.8rem;
+            padding: 1.7rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-primary);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="color"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid var(--border-primary);
+            border-radius: 0.4rem;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        input[type="color"] {
+            padding: 0.1rem;
+            height: 2.7rem;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+        }
+
+        .btn {
+            padding: 0.7rem 1.4rem;
+            border: none;
+            border-radius: 0.4rem;
+            background-color: var(--bg-btn-primary);
+            color: var(--text-btn-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background-color: var(--bg-btn-primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+             transform: translateY(0px);
+        }
+        
+        .btn-small {
+            font-size: 0.8rem !important;
+            padding: 0.55rem 0.8rem !important;
+        }
+        
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-icon svg {
+             width: 18px;
+             height: 18px;
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-btn-secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-btn-secondary-hover);
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .btn:disabled {
+            background-color: #40414f;
+            cursor: not-allowed;
+            color: #888;
+        }
+
+        .course-tag {
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            padding: 0.7rem;
+            border-radius: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            justify-content: space-between;
+            margin-bottom: 0.7rem;
+        }
+        
+        .course-tag.archived {
+            background-color: #4f4f4f;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .delete-course {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.7rem;
+            margin-top: 1.4rem;
+        }
+
+        .day-column {
+            background-color: var(--bg-secondary);
+            border-radius: 0.5rem;
+            padding: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid transparent;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        .day-column.today-column {
+            background-color: var(--bg-secondary);
+            border-color: var(--primary-color);
+        }
+
+        .day-header {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text-title);
+            text-align: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-primary);
+        }
+        
+        .day-header-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: normal;
+        }
+
+        .day-header.today {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            font-size: 1.25rem;
+        }
+
+        .schedule-item {
+            background-color: var(--bg-input);
+            border-radius: 0.4rem;
+            padding: 0.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-right: 3px solid var(--bg-btn-primary);
+        }
+        
+        .home-schedule-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+        }
+
+        .schedule-item .delete-course {
+            position: absolute;
+            top: 0.3rem;
+            left: 0.3rem;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .course-details {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- استایل‌های جدید صفحه آمار --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+             margin-top: 1.4rem;
+            margin-bottom: 1.4rem;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.4rem;
+            margin-top: 1.4rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.5rem;
+            padding: 1.4rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-card);
+        }
+        
+        .stat-card h3 {
+            color: var(--text-title);
+            margin-top: 0;
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--border-primary);
+            padding-bottom: 0.7rem;
+            margin-bottom: 1rem;
+        }
+        .stat-detail {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--bg-btn-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .time-range-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .time-range-toggle button {
+            background-color: var(--bg-btn-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+            padding: 0.5rem 1.1rem;
+            border-radius: 0.4rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .time-range-toggle button:hover {
+            background-color: var(--bg-btn-secondary-hover);
+        }
+
+        .time-range-toggle button.active {
+            background-color: var(--bg-btn-primary);
+            border-color: var(--bg-btn-primary);
+            color: var(--text-btn-primary);
+        }
+
+        .stats-overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.4rem;
+            align-items: center;
+            margin-top: 1.4rem;
+        }
+
+        .pie-chart-container {
+            max-width: 350px;
+            margin: 0 auto;
+        }
+
+        .stats-details-container ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 0.7rem;
+        }
+        .stats-details-container li {
+            font-size: 0.95rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            justify-content: space-between;
+        }
+        .stats-details-container li:last-child {
+            border-bottom: none;
+        }
+        /* --- پایان استایل‌های جدید صفحه آمار --- */
+
+
+        .timer-page-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .timer-main-card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.8rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-primary);
+        }
+        
+        .timer-content {
+            text-align: center;
+        }
+        .timer-display-modern {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 5rem;
+            font-weight: bold;
+            color: var(--text-title);
+            margin-bottom: 1.7rem;
+            letter-spacing: 2px;
+        }
+        .timer-controls-modern {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+        }
+        .timer-controls-modern .btn {
+            padding: 0.8rem 1.7rem;
+            font-size: 1.1rem;
+            min-width: 8rem;
+        }
+        
+        /* استایل‌های جدید زمان‌سنج */
+        .timer-type-selector {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .timer-type-selector .btn {
+            flex: 1;
+            max-width: 150px;
+        }
+        .test-results-form {
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-primary);
+            padding-top: 1.5rem;
+        }
+        .test-results-form h4 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--text-title);
+        }
+        /* --- */
+        
+        .notification {
+            position: fixed;
+            bottom: 1.4rem;
+            right: 1.4rem;
+            background-color: var(--bg-btn-primary);
+            color: white;
+            padding: 0.8rem 1.4rem;
+            border-radius: 0.4rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-size: 1rem;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to   { bottom: 1.4rem; opacity: 1; }
+        }
+
+        @keyframes fadeout {
+            from { bottom: 1.4rem; opacity: 1; }
+            to   { bottom: 0; opacity: 0; }
+        }
+
+        .comparison-card {
+            background-color: var(--bg-input);
+            border-radius: 0.7rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-left: 5px solid var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+        .comparison-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .comparison-card.positive { border-left-color: var(--color-positive); }
+        .comparison-card.negative { border-left-color: var(--color-negative); }
+
+        .comparison-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: bold;
+        }
+        .comparison-main-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-title);
+        }
+        .comparison-change {
+            font-size: 0.95rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .comparison-change.positive { color: var(--color-positive); }
+        .comparison-change.negative { color: var(--color-negative); }
+        
+        @media (max-width: 1024px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-controls button {
+            background: none;
+            border: none;
+            color: var(--bg-btn-primary);
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        .chart-controls span {
+            font-weight: bold;
+        }
+        
+        .settings-section-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.7rem;
+            margin-bottom: 1.7rem;
+            margin-top: 1.4rem;
+        }
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.7rem;
+            margin-top: 1.4rem;
+        }
+        .settings-card {
+            background-color: var(--bg-secondary);
+            border-radius: 0.8rem;
+            padding: 1.7rem;
+            border: 1px solid var(--border-primary);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+        }
+        .settings-card.full-width {
+            grid-column: 1 / -1;
+        }
+        .settings-card h3 {
+            margin-top: 0;
+            color: var(--text-title);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            border-bottom: 1px solid var(--border-primary);
+            padding-bottom: 0.7rem;
+            margin-bottom: 1.4rem;
+        }
+        .settings-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            flex-grow: 1;
+            margin-bottom: 1.4rem;
+        }
+        .settings-card .btn {
+            width: 100%;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .settings-personalization-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        
+        .theme-mode-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .theme-mode-btn {
+            padding: 1rem;
+            border: 2px solid var(--border-primary);
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .theme-mode-btn:hover {
+            background-color: var(--bg-sidebar-item-hover);
+            border-color: var(--text-secondary);
+        }
+        .theme-mode-btn.active {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+
+        .theme-switch-label {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: bold;
+        }
+
+        .record-type-selector {
+            display: flex;
+            gap: 0.7rem;
+            margin-bottom: 1.4rem;
+            justify-content: center;
+        }
+
+        .record-type-selector button {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.7rem;
+            border-bottom: 1px solid var(--border-primary);
+            margin-bottom: 1.4rem;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.7rem 1rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            border-bottom: 3px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+        }
+        
+        .tab-button:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            color: var(--bg-btn-primary);
+            border-bottom: 3px solid var(--bg-btn-primary);
+        }
+        
+        .tab-content {
+            padding-top: 1rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--bg-input);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            height: 1.4rem;
+            border: 1px solid var(--border-primary);
+            margin-top: 0.7rem;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--bg-btn-primary);
+            transition: width 0.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+        .progress-bar.completed {
+            background: repeating-linear-gradient(45deg, var(--bg-btn-primary), var(--bg-btn-primary) 10px, var(--bg-btn-primary-hover) 10px, var(--bg-btn-primary-hover) 20px);
+        }
+        .progress-bar-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: var(--text-btn-primary);
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .goal-card-grid {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+             gap: 1.4rem;
+             align-items: flex-start;
+        }
+        .goal-card {
+            background-color: var(--bg-input);
+            border-radius: 0.7rem;
+            padding: 1rem;
+            position: relative;
+            border-left: 5px solid var(--primary-color);
+        }
+        .goal-card.completed {
+             border-left-color: #ffc107;
+        }
+        .goal-card-actions {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        .sidebar-toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-btn-secondary);
+            border: none;
+            color: var(--text-primary);
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.4rem;
+            line-height: 1;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+        }
+        .sidebar-toggle-btn:hover {
+            background-color: var(--bg-btn-secondary-hover);
+        }
+        
+        .sidebar.collapsed {
+            width: 70px;
+        }
+        
+        .sidebar.collapsed .sidebar-header {
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .sidebar-title,
+        .sidebar.collapsed .sidebar-footer {
+            opacity: 0;
+            visibility: hidden;
+            display: none;
+        }
+        
+        .sidebar.collapsed .sidebar-item-label {
+            display: none;
+        }
+        
+        .sidebar.collapsed .sidebar-item {
+            justify-content: center;
+        }
+        
+        /* استایل‌های جدید مدیریت آمار */
+        .manage-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+        .record-card {
+            background-color: var(--bg-input);
+            border-radius: 0.7rem;
+            border-right: 5px solid var(--primary-color);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        .record-card.test-record {
+            border-right-color: var(--chart-color-2);
+        }
+        .record-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-primary);
+            padding-bottom: 0.7rem;
+        }
+        .record-card-header-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .record-card-header-date {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .record-card-body {
+            font-size: 1rem;
+        }
+        .record-card-body-study {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .record-card-body-study span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: normal;
+            margin-right: 5px;
+        }
+        .record-card-body-test {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem;
+            text-align: center;
+        }
+        .record-card-body-test div {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .record-card-body-test span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: block;
+        }
+        .record-card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+        /* --- */
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+    <!-- کتابخانه چارت -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- محتوای برنامه ری‌اکت -->
+    <div id="app"></div>
+    
+    <!-- کتابخانه‌های ری‌اکت و بابل -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- کد ری‌اکت (Babel) -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        // --- Custom Hook for Local Storage ---
+        function useLocalStorage(key, initialValue) {
+            const [value, setValue] = useState(() => {
+                try {
+                    const item = window.localStorage.getItem(key);
+                    return item ? JSON.parse(item) : initialValue;
+                } catch (error) {
+                    console.log(error);
+                    return initialValue;
+                }
+            });
+
+            useEffect(() => {
+                try {
+                    window.localStorage.setItem(key, JSON.stringify(value));
+                } catch (error) {
+                    console.log(error);
+                }
+            }, [key, value]);
+
+            return [value, setValue];
+        }
+
+        // --- Utility Functions ---
+        const getRandomColor = () => {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        };
+        
+        const getShamsiDateString = (date) => {
+             // فرمت استاندارد YYYY/MM/DD با اعداد لاتین برای سازگاری
+             return date.toLocaleDateString('fa-IR-u-nu-latn', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+)/, '$1/$2/$3');
+        };
+
+        const getTodayShamsiDate = () => {
+            return getShamsiDateString(new Date());
+        };
+        
+        const formatMinutes = (minutes) => `${Math.floor(minutes/60)} ساعت و ${Math.round(minutes % 60)} دقیقه`;
+        
+        // تابع کمکی برای دریافت بازه تاریخی
+        const getDateRange = (date, period) => {
+            const d = new Date(date);
+            if (period === 'weekly') {
+                const day = d.getDay();
+                const diff = d.getDate() - (day === 6 ? 0 : day + 1); // 6 is Friday
+                const start = new Date(d.setDate(diff));
+                start.setHours(0, 0, 0, 0);
+                const end = new Date(start);
+                end.setDate(start.getDate() + 6);
+                end.setHours(23, 59, 59, 999);
+                return { start, end };
+            } else if (period === 'monthly') {
+                const start = new Date(d.getFullYear(), d.getMonth(), 1);
+                start.setHours(0, 0, 0, 0);
+                const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+                end.setHours(23, 59, 59, 999);
+                return { start, end };
+            }
+            return { start: new Date(0), end: new Date() }; // Default/All-time (not used here)
+        };
+        
+        // تابع کمکی برای محاسبه آمار (بر اساس Timestamp)
+        const calculatePeriodStats = (studyRecords, testRecords, startDate, endDate) => {
+            const periodStudy = studyRecords.filter(r => {
+                const recordDate = new Date(r.timestamp);
+                return recordDate >= startDate && recordDate <= endDate;
+            });
+            const periodTests = testRecords.filter(r => {
+                const recordDate = new Date(r.timestamp);
+                return recordDate >= startDate && recordDate <= endDate;
+            });
+
+            const totalMinutes = periodStudy.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0);
+            const totalTests = periodTests.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
+            const totalCorrect = periodTests.reduce((sum, r) => sum + (r.correct || 0), 0);
+            const totalIncorrect = periodTests.reduce((sum, r) => sum + (r.incorrect || 0), 0);
+            const totalUnanswered = periodTests.reduce((sum, r) => sum + (r.unanswered || 0), 0);
+            const totalAttempted = totalCorrect + totalIncorrect;
+            const accuracy = totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
+            
+            // پیدا کردن روز اوج مطالعه
+            const dailyStudy = {};
+            periodStudy.forEach(r => {
+                const date = r.date;
+                const mins = (r.hours * 60) + r.minutes;
+                dailyStudy[date] = (dailyStudy[date] || 0) + mins;
+            });
+            const peakDay = Object.keys(dailyStudy).reduce((a, b) => dailyStudy[a] > dailyStudy[b] ? a : b, null);
+
+
+            return { 
+                totalMinutes, 
+                totalTests, 
+                totalCorrect, 
+                totalIncorrect,
+                totalUnanswered,
+                accuracy,
+                peakDay: peakDay ? { date: peakDay, minutes: dailyStudy[peakDay] } : null
+            };
+        };
+
+        // تابع کمکی برای محاسبه آمار (بر اساس تاریخ شمسی)
+        const calculatePeriodStatsShamsi = (studyRecords, testRecords, startDate, endDate) => {
+            // startDate and endDate are Gregorian Date objects
+            const shamsiStart = getShamsiDateString(startDate);
+            const shamsiEnd = getShamsiDateString(endDate);
+
+            const periodStudy = studyRecords.filter(r => {
+                return r.date >= shamsiStart && r.date <= shamsiEnd;
+            });
+            const periodTests = testRecords.filter(r => {
+                return r.date >= shamsiStart && r.date <= shamsiEnd;
+            });
+
+            const totalMinutes = periodStudy.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0);
+            const totalTests = periodTests.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
+            const totalCorrect = periodTests.reduce((sum, r) => sum + (r.correct || 0), 0);
+            const totalIncorrect = periodTests.reduce((sum, r) => sum + (r.incorrect || 0), 0);
+            const totalUnanswered = periodTests.reduce((sum, r) => sum + (r.unanswered || 0), 0);
+            const totalAttempted = totalCorrect + totalIncorrect;
+            const accuracy = totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
+            
+            // پیدا کردن روز اوج مطالعه
+            const dailyStudy = {};
+            periodStudy.forEach(r => {
+                const date = r.date;
+                const mins = (r.hours * 60) + r.minutes;
+                dailyStudy[date] = (dailyStudy[date] || 0) + mins;
+            });
+            const peakDay = Object.keys(dailyStudy).reduce((a, b) => dailyStudy[a] > dailyStudy[b] ? a : b, null);
+
+
+            return { 
+                totalMinutes, 
+                totalTests, 
+                totalCorrect, 
+                totalIncorrect,
+                totalUnanswered,
+                accuracy,
+                peakDay: peakDay ? { date: peakDay, minutes: dailyStudy[peakDay] } : null
+            };
+        };
+
+        // --- کامپوننت‌های آیکون SVG ---
+        const IconHome = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10 0h3a1 1 0 001-1V10M9 20h6V12H9v8z" /></svg>;
+        // const IconTimer = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>; // حذف شد
+        const IconRecord = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>;
+        const IconStats = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6m4 0V7a2 2 0 00-2-2h-2a2 2 0 00-2 2v12a2 2 0 002 2h2a2 2 0 002-2z" /></svg>;
+        const IconManage = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0h4m-4 0H6m4 0h6m6 0h-2.586a1 1 0 00-.707.293l-1.414 1.414a1 1 0 01-.707.293h-2.172a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 006.586 6H4m12 6h-4m4 3h-4m4 3h-4m-4-3H4m4 0h4" /></svg>;
+        const IconSchedule = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>;
+        const IconCourses = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v11.494M12 6.253c0-1.523.6-2.5 1.5-2.5.9 0 1.5.977 1.5 2.5v11.494M12 6.253c0-1.523-.6-2.5-1.5-2.5-.9 0-1.5.977-1.5 2.5v11.494M5.625 15c0-1.523.6-2.5 1.5-2.5.9 0 1.5.977 1.5 2.5v3.494M5.625 15c0-1.523-.6-2.5-1.5-2.5-.9 0-1.5.977-1.5 2.5v3.494m16.875-3.494c0-1.523.6-2.5 1.5-2.5.9 0 1.5.977 1.5 2.5v3.494m-3-3.494c0-1.523-.6-2.5-1.5-2.5-.9 0-1.5.977-1.5 2.5v3.494" /></svg>;
+        const IconGoals = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h3.75c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-3.75A1.125 1.125 0 013 16.875v-3.75zM3 4.125C3 3.504 3.504 3 4.125 3h3.75c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-3.75A1.125 1.125 0 013 7.875V4.125zM13.125 3C12.504 3 12 3.504 12 4.125v3.75c0 .621.504 1.125 1.125 1.125h3.75c.621 0 1.125-.504 1.125-1.125V4.125C18 3.504 17.496 3 16.875 3h-3.75zM13.125 12C12.504 12 12 12.504 12 13.125v3.75c0 .621.504 1.125 1.125 1.125h3.75c.621 0 1.125-.504 1.125-1.125v-3.75c0-.621-1.125-1.125-1.125-1.125h-3.75z" /></svg>;
+        const IconSettings = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.573-1.066z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>;
+        const IconMenu = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: '20px', height: '20px'}}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>;
+        const IconClose = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: '20px', height: '20px'}}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>;
+        
+        // --- کامپوننت‌های صفحات ---
+
+        function CoursesPage({ courses, setCourses, studyActivities, setStudyActivities, studyRecords, showNotification }) {
+            const [activeTab, setActiveTab] = useState('courses');
+            const [newCourseName, setNewCourseName] = useState('');
+            const [showArchivedCourses, setShowArchivedCourses] = useState(false);
+            const [newActivityName, setNewActivityName] = useState('');
+            const [showArchivedActivities, setShowArchivedActivities] = useState(false);
+            const [editingActivity, setEditingActivity] = useState(null);
+
+            const addCourse = () => {
+                if (!newCourseName.trim()) return;
+                const newCourse = { id: Date.now(), name: newCourseName, color: getRandomColor(), isArchived: false };
+                setCourses([...courses, newCourse]);
+                setNewCourseName('');
+                showNotification('درس جدید اضافه شد');
+            };
+
+            const toggleArchiveCourse = (id) => {
+                const course = courses.find(c => c.id === id);
+                setCourses(courses.map(c => c.id === id ? { ...c, isArchived: !c.isArchived } : c));
+                showNotification(course.isArchived ? `درس "${course.name}" بازیابی شد` : `درس "${course.name}" آرشیو شد`);
+            };
+
+            const addActivity = () => {
+                if (!newActivityName.trim()) return;
+                const newActivity = { id: Date.now(), name: newActivityName, isArchived: false };
+                setStudyActivities([...studyActivities, newActivity]);
+                setNewActivityName('');
+                showNotification('فعالیت جدید اضافه شد');
+            };
+
+            const updateActivity = () => {
+                setStudyActivities(studyActivities.map(a => a.id === editingActivity.id ? editingActivity : a));
+                setEditingActivity(null);
+                showNotification('فعالیت ویرایش شد');
+            };
+
+            const handleActivityArchiveOrDelete = (activity) => {
+                const isInUse = studyRecords.some(record => record.activityType === activity.name);
+                if (isInUse) {
+                    setStudyActivities(studyActivities.map(a => a.id === activity.id ? { ...a, isArchived: !a.isArchived } : a));
+                    showNotification(activity.isArchived ? `فعالیت "${activity.name}" بازیابی شد` : `فعالیت "${activity.name}" آرشیو شد`);
+                } else {
+                    setStudyActivities(studyActivities.filter(a => a.id !== activity.id));
+                    showNotification(`فعالیت "${activity.name}" حذف شد`);
+                }
+            };
+            
+            const visibleCourses = showArchivedCourses ? courses : courses.filter(c => !c.isArchived);
+            const visibleActivities = showArchivedActivities ? studyActivities : studyActivities.filter(a => !a.isArchived);
+
+            return (
+                <div>
+                    <h1 className="page-title">مدیریت</h1>
+                    <div className="card">
+                        <div className="tabs">
+                            <button className={`tab-button ${activeTab === 'courses' ? 'active' : ''}`} onClick={() => setActiveTab('courses')}>درس‌ها</button>
+                            <button className={`tab-button ${activeTab === 'activities' ? 'active' : ''}`} onClick={() => setActiveTab('activities')}>فعالیت‌ها</button>
+                        </div>
+
+                        {activeTab === 'courses' && (
+                            <div>
+                                <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+                                    <input type="text" placeholder="نام درس جدید..." value={newCourseName} onChange={e => setNewCourseName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addCourse()} style={{flex: 1}} />
+                                    <button onClick={addCourse} className="btn btn-small">افزودن درس</button>
+                                </div>
+                                <div style={{marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                    <label><input type="checkbox" checked={showArchivedCourses} onChange={() => setShowArchivedCourses(!showArchivedCourses)} /> نمایش آرشیو شده‌ها</label>
+                                </div>
+                                {visibleCourses.map(course => (
+                                    <div key={course.id} className={`course-tag ${course.isArchived ? 'archived' : ''}`} style={{ borderRight: `4px solid ${course.color}`}}>
+                                        <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
+                                            <input type="color" value={course.color} onChange={(e) => setCourses(courses.map(c => c.id === course.id ? { ...c, color: e.target.value } : c))} style={{width: '30px', height: '30px', padding: '0', border: 'none', background: 'none'}} title="انتخاب رنگ"/>
+                                            <span style={{fontWeight: 'bold'}}>{course.name}</span>
+                                        </div>
+                                        <button onClick={() => toggleArchiveCourse(course.id)} className="btn btn-small btn-warning">{course.isArchived ? 'بازیابی' : 'آرشیو'}</button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        
+                        {activeTab === 'activities' && (
+                             <div>
+                                <div style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+                                    <input type="text" placeholder="نام فعالیت جدید..." value={newActivityName} onChange={e => setNewActivityName(e.target.value)} onKeyDown={e => e.key === 'Enter' && addActivity()} style={{flex: 1}} />
+                                    <button onClick={addActivity} className="btn btn-small">افزودن فعالیت</button>
+                                </div>
+                                 <div style={{marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+                                    <label><input type="checkbox" checked={showArchivedActivities} onChange={() => setShowArchivedActivities(!showArchivedActivities)} /> نمایش آرشیو شده‌ها</label>
+                                </div>
+                                {visibleActivities.map(activity => (
+                                    <div key={activity.id} className={`course-tag ${activity.isArchived ? 'archived' : ''}`}>
+                                        {editingActivity?.id === activity.id ? (
+                                            <input type="text" value={editingActivity.name} onChange={(e) => setEditingActivity({...editingActivity, name: e.target.value})} style={{flex: 1}}/>
+                                        ) : (
+                                            <span>{activity.name}</span>
+                                        )}
+                                        <div style={{display: 'flex', gap: '5px'}}>
+                                            {editingActivity?.id === activity.id ? (
+                                                <button onClick={updateActivity} className="btn btn-small">ذخیره</button>
+                                            ) : (
+                                                <button onClick={() => setEditingActivity(activity)} className="btn btn-small btn-secondary">ویرایش</button>
+                                            )}
+                                            <button onClick={() => handleActivityArchiveOrDelete(activity)} className="btn btn-small btn-warning">{activity.isArchived ? 'بازیابی' : (studyRecords.some(r => r.activityType === activity.name) ? 'آرشیو' : 'حذف')}</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        function GoalsPage({ goals, setGoals, studyRecords, testRecords, courses, showNotification }) {
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [goalToEdit, setGoalToEdit] = useState(null);
+
+            const initialFormState = {
+                title: '',
+                type: 'study', // 'study' or 'test'
+                course: 'all', // 'all' or specific course name
+                target: 10,
+                period: 'weekly', // 'weekly', 'monthly', 'total'
+            };
+            const [formState, setFormState] = useState(initialFormState);
+
+            useEffect(() => {
+                if(goalToEdit) {
+                    setFormState(goalToEdit);
+                    setIsModalOpen(true);
+                } else {
+                    setFormState(initialFormState);
+                }
+            }, [goalToEdit]);
+            
+             useEffect(() => {
+                goals.forEach(goal => {
+                    const { progress, isCompleted, current } = calculateProgress(goal);
+                    if(isCompleted && !goal.notified) {
+                        showNotification(`🎉 تبریک! شما به هدف "${goal.title}" رسیدید.`);
+                        setGoals(prev => prev.map(g => g.id === goal.id ? {...g, notified: true} : g));
+                    }
+                });
+            }, [studyRecords, testRecords, goals]);
+
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormState(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!formState.title || !formState.target || Number(formState.target) <= 0) {
+                    showNotification('لطفا عنوان و یک هدف معتبر (بزرگتر از صفر) وارد کنید.');
+                    return;
+                }
+                const goalData = {
+                    ...formState,
+                    id: goalToEdit ? goalToEdit.id : Date.now(),
+                    createdAt: goalToEdit ? goalToEdit.createdAt : new Date().toISOString(),
+                    target: Number(formState.target)
+                };
+
+                if(goalToEdit) {
+                    setGoals(goals.map(g => g.id === goalToEdit.id ? goalData : g));
+                    showNotification("هدف ویرایش شد.");
+                } else {
+                    setGoals([...goals, goalData]);
+                    showNotification("هدف جدید اضافه شد.");
+                }
+
+                setIsModalOpen(false);
+                setGoalToEdit(null);
+            };
+            
+            const deleteGoal = (id) => {
+                setGoals(goals.filter(g => g.id !== id));
+            };
+
+            const calculateProgress = (goal) => {
+                const now = new Date();
+                let recordsToConsider;
+                let startDate;
+                
+                if (goal.period === 'weekly') {
+                    const { start } = getDateRange(now, 'weekly');
+                    startDate = start;
+                } else if (goal.period === 'monthly') {
+                    const { start } = getDateRange(now, 'monthly');
+                    startDate = start;
+                } else { // total
+                    startDate = new Date(goal.createdAt);
+                }
+                
+                if (goal.type === 'study') {
+                    recordsToConsider = studyRecords;
+                } else {
+                    recordsToConsider = testRecords;
+                }
+
+                let filteredRecords = recordsToConsider.filter(r => new Date(r.timestamp) >= startDate);
+                if (goal.course !== 'all') {
+                    filteredRecords = filteredRecords.filter(r => r.course === goal.course);
+                }
+                
+                let current = 0;
+                if (goal.type === 'study') {
+                    current = filteredRecords.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0); // current in minutes
+                    current = current / 60; // convert to hours to match target
+                } else { // test
+                    current = filteredRecords.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
+                }
+
+                const progress = goal.target > 0 ? (current / goal.target) * 100 : 0;
+                
+                return {
+                    progress: Math.min(100, progress),
+                    current,
+                    isCompleted: progress >= 100
+                };
+            };
+
+            const activeCourses = courses.filter(c => !c.isArchived);
+
+            return (
+                <div>
+                    <h1 className="page-title">اهداف</h1>
+                    <div style={{textAlign: 'center', marginBottom: '20px'}}>
+                        <button className="btn" onClick={() => { setGoalToEdit(null); setIsModalOpen(true); }}>تعریف هدف جدید</button>
+                    </div>
+
+                    <div className="goal-card-grid">
+                        {goals.length > 0 ? goals.map(goal => {
+                            const { progress, current, isCompleted } = calculateProgress(goal);
+                            const unitLabel = goal.type === 'study' ? 'ساعت' : 'تست';
+                            
+                            return (
+                                <div key={goal.id} className={`goal-card ${isCompleted ? 'completed' : ''}`}>
+                                    <div className="goal-card-actions">
+                                        <button onClick={() => setGoalToEdit(goal)} className="btn btn-small btn-secondary" style={{padding: '3px 6px', fontSize: '12px'}}>ویرایش</button>
+                                        <button onClick={() => deleteGoal(goal.id)} className="delete-course" style={{fontSize: '18px'}}>×</button>
+                                    </div>
+                                    <h3 style={{fontSize: '16px'}}>{goal.title} {isCompleted && '🏆'}</h3>
+                                    <p style={{fontSize: '13px', color: 'var(--text-secondary)'}}>
+                                        {goal.course === 'all' ? 'همه دروس' : goal.course} - 
+                                        {goal.period === 'weekly' ? ' هفتگی' : (goal.period === 'monthly' ? ' ماهانه' : ' کلی')}
+                                    </p>
+                                    <div>
+                                        <label>{current.toFixed(1)} / {goal.target} {unitLabel}</label>
+                                        <div className="progress-bar-container">
+                                            <div className={`progress-bar ${isCompleted ? 'completed' : ''}`} style={{ width: `${progress}%` }}></div>
+                                            <div className="progress-bar-text">{progress.toFixed(1)}%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        }) : (
+                            <p style={{gridColumn: '1 / -1', textAlign: 'center', color: 'var(--text-secondary)'}}>
+                                هنوز هیچ هدفی تعریف نشده است.
+                            </p>
+                        )}
+                    </div>
+
+                    {isModalOpen && (
+                        <div className="overlay show" onClick={() => setIsModalOpen(false)}>
+                            <div className="card" onClick={(e) => e.stopPropagation()} style={{ width: '90%', maxWidth: '500px' }}>
+                                <h3>{goalToEdit ? 'ویرایش هدف' : 'هدف جدید'}</h3>
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-group">
+                                        <label>عنوان هدف</label>
+                                        <input type="text" name="title" value={formState.title} onChange={handleInputChange} placeholder="مثلا: ۲۰۰ تست حسابان" />
+                                    </div>
+                                    <div className="form-grid" style={{gridTemplateColumns: '1fr 1fr'}}>
+                                        <div className="form-group">
+                                            <label>نوع</label>
+                                            <select name="type" value={formState.type} onChange={handleInputChange}>
+                                                <option value="study">مطالعه</option>
+                                                <option value="test">تست</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>درس</label>
+                                            <select name="course" value={formState.course} onChange={handleInputChange}>
+                                                <option value="all">همه دروس</option>
+                                                {activeCourses.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                                            </select>
+                                        </div>
+                                    </div>
+                                     <div className="form-grid" style={{gridTemplateColumns: '1fr 1fr'}}>
+                                         <div className="form-group">
+                                            <label>مقدار هدف ({formState.type === 'study' ? 'ساعت' : 'عدد'})</label>
+                                            <input type="number" name="target" min="1" value={formState.target} onChange={handleInputChange} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>دوره</label>
+                                            <select name="period" value={formState.period} onChange={handleInputChange}>
+                                                <option value="weekly">هفتگی</option>
+                                                <option value="monthly">ماهانه</option>
+                                                <option valueV="total">کلی</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                        <button type="submit" className="btn">{goalToEdit ? 'ذخیره' : 'افزودن'}</button>
+                                        <button type="button" onClick={() => { setIsModalOpen(false); setGoalToEdit(null); }} className="btn btn-secondary">لغو</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+    
+        function SettingsPage({ 
+            exportData, importData, clearAllData, 
+            isDarkMode, setIsDarkMode, showNotification
+        }) {
+            const fileInputRef = React.useRef(null);
+            const [installPrompt, setInstallPrompt] = React.useState(null);
+
+            useEffect(() => {
+                const handler = e => {
+                    e.preventDefault();
+                    setInstallPrompt(e);
+                };
+                window.addEventListener('beforeinstallprompt', handler);
+                return () => window.removeEventListener('beforeinstallprompt', handler);
+            }, []);
+
+            const handleInstallClick = () => {
+                if (installPrompt) {
+                    installPrompt.prompt();
+                    installPrompt.userChoice.then(choiceResult => {
+                        if (choiceResult.outcome === 'accepted') {
+                            showNotification('برنامه با موفقیت نصب شد!');
+                        }
+                        setInstallPrompt(null);
+                    });
+                } else {
+                    showNotification('برنامه قابل نصب نیست یا از قبل نصب شده است.');
+                }
+            };
+
+            const handleImportClick = () => fileInputRef.current.click();
+
+            return (
+                <div>
+                    <h1 className="page-title">تنظیمات</h1>
+                    
+                    <h2 className="settings-section-title">شخصی‌سازی</h2>
+                     <div className="settings-card full-width">
+                        <div className="settings-personalization-grid">
+                            <div>
+                                <span className="theme-switch-label">پوسته برنامه</span>
+                                <div className="theme-mode-selector">
+                                    <button 
+                                        className={`theme-mode-btn ${!isDarkMode ? 'active' : ''}`}
+                                        onClick={() => setIsDarkMode(false)}
+                                    >
+                                        روشن
+                                    </button>
+                                    <button 
+                                        className={`theme-mode-btn ${isDarkMode ? 'active' : ''}`}
+                                        onClick={() => setIsDarkMode(true)}
+                                    >
+                                        تاریک
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 className="settings-section-title">مدیریت اطلاعات</h2>
+                     <div className="settings-grid">
+                        {(installPrompt || !window.matchMedia('(display-mode: standalone)').matches) && (
+                             <div className="settings-card">
+                                <h3>
+                                    <span role="img" aria-label="mobile">📱</span>
+                                    <span>نصب برنامه</span>
+                                </h3>
+                                <p>برنامه را مانند یک اپلیکیشن روی صفحه اصلی دستگاه خود نصب کنید تا دسترسی سریع و آفلاین داشته باشید.</p>
+                                <button className="btn" onClick={handleInstallClick} disabled={!installPrompt}>نصب برنامه</button>
+                            </div>
+                        )}
+
+                        <div className="settings-card">
+                             <h3>
+                                <span role="img" aria-label="export">📤</span>
+                                <span>پشتیبان‌گیری</span>
+                            </h3>
+                            <p>از تمام اطلاعات خود یک فایل پشتیبان تهیه کنید. توصیه می‌شود به طور منظم این کار را انجام دهید.</p>
+                            <button className="btn btn-icon" onClick={exportData}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: '18px', height: '18px'}}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                <span>دریافت فایل پشتیبان</span>
+                            </button>
+                        </div>
+                        <div className="settings-card">
+                            <h3>
+                                <span role="img" aria-label="import">📥</span>
+                                <span>بازیابی اطلاعات</span>
+                            </h3>
+                            <p>یک فایل پشتیبان معتبر (JSON) را برای بازیابی اطلاعات خود انتخاب کنید. توجه: اطلاعات فعلی با اطلاعات فایل جایگزین خواهد شد.</p>
+                            <input type="file" ref={fileInputRef} onChange={importData} style={{ display: 'none' }} accept=".json" />
+                            <button className="btn btn-secondary btn-icon" onClick={handleImportClick}>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: '18px', height: '18px'}}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12" /></svg>
+                                <span>انتخاب فایل</span>
+                            </button>
+                        </div>
+                        <div className="settings-card" style={{borderColor: '#dc3545'}}>
+                             <h3 style={{color: '#dc3545'}}>
+                                <span role="img" aria-label="delete">🗑️</span>
+                                <span>حذف تمام اطلاعات</span>
+                             </h3>
+                            <p>این عملیات تمام داده‌های شما را از حافظه مرورگر پاک می‌کند و غیرقابل بازگشت است. قبل از انجام این کار حتما پشتیبان تهیه کنید.</p>
+                            <button className="btn btn-danger btn-icon" onClick={clearAllData}>
+                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: '18px', height: '18px'}}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                 <span>حذف همه اطلاعات</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        function GoalTrackerCard({ goals, studyRecords, testRecords }) {
+            const calculateProgress = (goal) => {
+                const now = new Date();
+                let recordsToConsider;
+                let startDate;
+                
+                if (goal.period === 'weekly') {
+                    const { start } = getDateRange(now, 'weekly');
+                    startDate = start;
+                } else {
+                    return { progress: 0, current: 0 }; // Only show weekly goals on homepage
+                }
+                
+                if (goal.type === 'study') {
+                    recordsToConsider = studyRecords;
+                } else {
+                    recordsToConsider = testRecords;
+                }
+
+                let filteredRecords = recordsToConsider.filter(r => new Date(r.timestamp) >= startDate);
+                if (goal.course !== 'all') {
+                    filteredRecords = filteredRecords.filter(r => r.course === goal.course);
+                }
+                
+                let current = 0;
+                if (goal.type === 'study') {
+                    current = filteredRecords.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0); // current in minutes
+                    current = current / 60; // convert to hours to match target
+                } else { // test
+                    current = filteredRecords.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
+                }
+
+                const progress = goal.target > 0 ? (current / goal.target) * 100 : 0;
+                
+                return {
+                    progress: Math.min(100, progress),
+                    current,
+                    isCompleted: progress >= 100
+                };
+            };
+            
+            const weeklyGoals = goals.filter(g => g.period === 'weekly');
+            
+            if (weeklyGoals.length === 0) return null;
+
+            return (
+                <div className="card" style={{marginBottom: '25px'}}>
+                     <h2 style={{ fontSize: '1.4rem', color: 'var(--primary-color)', marginBottom: '20px', textAlign: 'center' }}>پیگیری اهداف هفته</h2>
+                     <div className="goal-card-grid">
+                         {weeklyGoals.map(goal => {
+                             const { progress, current } = calculateProgress(goal);
+                             const unitLabel = goal.type === 'study' ? 'ساعت' : 'تست';
+                             return (
+                                <div key={goal.id}>
+                                    <label>{goal.title}: {current.toFixed(1)} / {goal.target} {unitLabel}</label>
+                                    <div className="progress-bar-container">
+                                        <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+                                        <div className="progress-bar-text">{progress.toFixed(1)}%</div>
+                                    </div>
+                                </div>
+                             )
+                         })}
+                     </div>
+                </div>
+            );
+        }
+        
+        function OverallStatsSummary({ studyRecords, testRecords, streak }) {
+            
+            const calculateDaysToNowruz = () => {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                let nowruzDate = new Date(currentYear, 2, 21); // March 21st as an approximation
+                
+                // A more accurate Nowruz calculation is complex, this is a good estimate.
+                // For a more precise Persian calendar conversion, one would need a library.
+                // Let's assume the user is using the Gregorian year.
+                
+                if (now > nowruzDate) {
+                    nowruzDate = new Date(currentYear + 1, 2, 21);
+                }
+                const diffTime = nowruzDate - now;
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            };
+
+            const totalMinutes = studyRecords.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0);
+            const totalStudyHours = Math.floor(totalMinutes / 60);
+            const remainingStudyMinutes = totalMinutes % 60;
+            const totalTestCount = testRecords.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
+            const allRecords = [...studyRecords, ...testRecords];
+            const uniqueDays = [...new Set(allRecords.map(r => r.date))];
+            
+            // Calculate total days from first record to today
+            let firstDate = new Date();
+            if (allRecords.length > 0) {
+                 firstDate = allRecords.reduce((earliest, r) => {
+                    const d = new Date(r.timestamp);
+                    return d < earliest ? d : earliest;
+                }, new Date());
+            }
+            const today = new Date();
+            const timeDiff = today.getTime() - firstDate.getTime();
+            const totalDaysElapsed = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
+
+            const dailyAvgMinutes = totalMinutes / totalDaysElapsed;
+            const dailyAvgHours = Math.floor(dailyAvgMinutes / 60);
+            const dailyAvgRemainingMinutes = Math.round(dailyAvgMinutes % 60);
+
+            // گرد کردن میانگین تست‌ها به نزدیک‌ترین عدد صحیح
+            const dailyAvgTests = Math.round(totalTestCount / totalDaysElapsed);
+            const targetTestCount = 50000;
+            const testsRemaining = targetTestCount > totalTestCount ? targetTestCount - totalTestCount : 0;
+            const testProgressPercentage = totalTestCount > 0 ? (totalTestCount / targetTestCount) * 100 : 0;
+            
+            const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+            const dayIndex = today.getDay();
+            const persianDayIndex = dayIndex === 6 ? 0 : dayIndex + 1; // 6 = Friday -> 0 = شنبه
+            const currentDay = days[persianDayIndex];
+            const daysToNowruz = calculateDaysToNowruz(); // This is an approximation
+
+            return (
+                <div style={{ position: 'relative', width: '100%', marginBottom: '25px' }}>
+                    <div className="animated-bg-style" style={{ padding: '30px', direction: 'rtl', boxSizing: 'border-box' }}>
+                        <div style={{ textAlign: 'right', marginBottom: '20px' }}>
+                            <h2 style={{ fontSize: '1.6rem', fontWeight: 'bold', color: 'var(--primary-color)', marginBottom: '15px' }}>خلاصه آمار کلی</h2>
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '15px'}}>
+                                <p style={{ margin: '0', fontSize: '0.9rem', opacity: '0.7' }}>
+                                    {currentDay}، {getTodayShamsiDate()}
+                                </p>
+                                <p style={{ margin: '0', fontSize: '0.9rem', opacity: '0.7' }}>
+                                    {/* {daysToNowruz} روز تا ۱ فروردین  */}
+                                </p>
+                            </div>
+                            {streak > 0 && (
+                                <div style={{ background: 'rgba(255,200,0,0.2)', color: '#ffc107', borderRadius: '12px', padding: '5px 15px', fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>
+                                    شما {streak} روز متوالی مطالعه داشته‌اید! 🔥
+                                </div>
+                            )}
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch', flexWrap: 'wrap' }}>
+                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px', minWidth: '150px' }}>
+                                <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: '15px', padding: '15px', border: '1px solid rgba(255,255,255,0.1)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{totalStudyHours}h {remainingStudyMinutes}m</div>
+                                    <div style={{ fontSize: '0.8rem', opacity: '0.8', marginTop: '5px' }}>مجموع ساعت مطالعه</div>
+                                </div>
+                                <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: '15px', padding: '15px', border: '1px solid rgba(255,255,255,0.1)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{totalTestCount.toLocaleString()} تست</div>
+                                    <div style={{ fontSize: '0.8rem', opacity: '0.8', marginTop: '5px' }}>مجموع تعداد تست</div>
+                                </div>
+                            </div>
+
+                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px', minWidth: '150px' }}>
+                                <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: '15px', padding: '15px', border: '1px solid rgba(255,255,255,0.1)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{dailyAvgHours}h {dailyAvgRemainingMinutes}m</div>
+                                    <div style={{ fontSize: '0.8rem', opacity: '0.8', marginTop: '5px' }}>میانگین مطالعه روزانه</div>
+                                </div>
+                                <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: '15px', padding: '15px', border: '1px solid rgba(255,255,255,0.1)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
+                                    {/* --- FIX: .toFixed(1) removed --- */}
+                                    <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{dailyAvgTests}</div>
+                                    <div style={{ fontSize: '0.8rem', opacity: '0.8', marginTop: '5px' }}>میانگین تست روزانه</div>
+                                </div>
+                            </div>
+                            
+                            <div style={{ flex: '4', minWidth: '220px', display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ flex: 1, background: 'rgba(255, 255, 255, 0.05)', borderRadius: '15px', padding: '25px', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'right', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                    <p style={{ margin: '0 0 15px 0', fontSize: '1rem' }}>
+                                        پیشرفت: <strong style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{testProgressPercentage.toFixed(3)}%</strong>
+                                    </p>
+                                    <div style={{ width: '100%', height: '15px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '8px', overflow: 'hidden' }}>
+                                        <div style={{ width: `${testProgressPercentage}%`, height: '100%', background: 'linear-gradient(90deg, #fff, #b2fcc2)', transition: 'width 0.5s ease-in-out' }}></div>
+                                    </div>
+                                    <p style={{ fontWeight: 'bold', color: '#ff6b6b', marginTop: '15px', marginBottom: '0', fontSize: '1.1rem' }}>
+                                        {testsRemaining.toLocaleString()} تست باقی‌مانده
+                                    </p>
+                                    <p style={{ fontSize: '0.9rem', opacity: '0.7', marginTop: '5px', marginBottom: '0' }}>
+                                        (از هدف {targetTestCount.toLocaleString()} تست)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function HomePage({ 
+            weeklySchedule, studyRecords, testRecords, 
+            courses, streak, goals
+        }) {
+            
+            const getCurrentDayName = () => {
+                const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+                const today = new Date();
+                const dayIndex = today.getDay();
+                const persianDayIndex = dayIndex === 6 ? 0 : dayIndex + 1;
+                return days[persianDayIndex];
+            };
+            const currentDay = getCurrentDayName();
+            const todaySchedule = weeklySchedule[currentDay] || [];
+            const todayScheduleTotalMinutes = todaySchedule.reduce((sum, item) => sum + item.duration, 0);
+            
+            const calculateDaysStats = (days) => {
+                const today = new Date();
+                today.setHours(23, 59, 59, 999);
+                const startDate = new Date();
+                startDate.setDate(today.getDate() - (days - 1));
+                startDate.setHours(0,0,0,0);
+                
+                const stats = calculatePeriodStats(studyRecords, testRecords, startDate, today);
+                
+                const dailyAvgMinutes = days > 0 ? stats.totalMinutes / days : 0;
+                const dailyAvgTests = days > 0 ? stats.totalTests / days : 0;
+                
+                return { ...stats, dailyAvgMinutes, dailyAvgTests };
+            };
+
+            const last7DaysStats = calculateDaysStats(7);
+            const last30DaysStats = calculateDaysStats(30);
+
+            const formatAvgMinutes = (minutes) => {
+                const h = Math.floor(minutes / 60);
+                const m = Math.round(minutes % 60);
+                return `${h}س و ${m}د`;
+            };
+
+            return (
+                <div>
+                    <div className="home-grid home-grid-full-width">
+                         <div className="card">
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
+                                <h2 style={{fontSize: '18px', color: 'var(--primary-color)', margin: 0}}>
+                                    برنامه درسی امروز
+                                </h2>
+                                {todayScheduleTotalMinutes > 0 && 
+                                    <span style={{color: 'var(--text-secondary)'}}>
+                                        مجموع: {formatMinutes(todayScheduleTotalMinutes)}
+                                    </span>
+                                }
+                            </div>
+                            {todaySchedule.length > 0 ? (
+                                <div className="home-schedule-grid">
+                                    {todaySchedule.map(item => {
+                                        const courseColor = courses.find(c => c.name === item.course)?.color || 'var(--primary-color)';
+                                        return (
+                                            <div key={item.id} className="schedule-item" style={{ borderRightColor: courseColor }}>
+                                                <div><strong>{item.course}</strong></div>
+                                                <div className="course-details">{item.activityType} ({item.duration} دقیقه)</div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            ) : (
+                                <p style={{color: 'var(--text-secondary)', textAlign: 'center'}}>برنامه‌ای برای امروز تعریف نشده است</p>
+                            )}
+                        </div>
+                    </div>
+                
+                    <GoalTrackerCard goals={goals} studyRecords={studyRecords} testRecords={testRecords} />
+
+                    <div className="home-grid">
+                        <div className="card">
+                            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-title)', marginBottom: '20px', textAlign: 'center' }}>خلاصه آمار ۷ روز گذشته</h3>
+                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', textAlign: 'center' }}>
+                                <div>
+                                    <div className="stat-value">{formatMinutes(last7DaysStats.totalMinutes)}</div>
+                                    <div className="stat-label">مجموع مطالعه</div>
+                                </div>
+                                <div>
+                                    <div className="stat-value">{last7DaysStats.totalTests.toLocaleString()}</div>
+                                    <div className="stat-label">مجموع تست</div>
+                                </div>
+                                <div>
+                                    <div className="stat-value">{formatAvgMinutes(last7DaysStats.dailyAvgMinutes)}</div>
+                                    <div className="stat-label">میانگین مطالعه روزانه</div>
+                                </div>
+                                <div>
+                                    <div className="stat-value">{last7DaysStats.dailyAvgTests.toFixed(1)}</div>
+                                    <div className="stat-label">میانگین تست روزانه</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="card">
+                            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-title)', marginBottom: '20px', textAlign: 'center' }}>خلاصه آمار ۳۰ روز گذشته</h3>
+                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', textAlign: 'center' }}>
+                                <div>
+                                    <div className="stat-value">{formatMinutes(last30DaysStats.totalMinutes)}</div>
+                                    <div className="stat-label">مجموع مطالعه</div>
+                                </div>
+                                <div>
+                                    <div className="stat-value">{last30DaysStats.totalTests.toLocaleString()}</div>
+                                    <div className="stat-label">مجموع تست</div>
+                                </div>
+                                <div>
+                                    <div className="stat-value">{formatAvgMinutes(last30DaysStats.dailyAvgMinutes)}</div>
+                                    <div className="stat-label">میانگین مطالعه روزانه</div>
+                                </div>
+                                <div>
+                                    <div className="stat-value">{last30DaysStats.dailyAvgTests.toFixed(1)}</div>
+                                    <div className="stat-label">میانگین تست روزانه</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <OverallStatsSummary studyRecords={studyRecords} testRecords={testRecords} streak={streak} />
+                </div>
+            );
+        }
+
+        function RecordStatsPage({ courses, studyRecords, setStudyRecords, testRecords, setTestRecords, showNotification, studyActivities }) {
+            const [formType, setFormType] = useState('study');
+            const [formData, setFormData] = useState({
+                course: '',
+                hours: '',
+                minutes: '',
+                correct: '',
+                incorrect: '',
+                unanswered: '',
+                activityType: studyActivities[0]?.name || '',
+                date: getTodayShamsiDate()
+            });
+            
+            const activeCourses = courses.filter(c => !c.isArchived);
+            const activeActivities = studyActivities.filter(a => !a.isArchived);
+        
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!formData.course) {
+                    return showNotification('لطفا درس را انتخاب کنید');
+                }
+        
+                if (formType === 'study') {
+                    const hours = parseInt(formData.hours) || 0;
+                    const minutes = parseInt(formData.minutes) || 0;
+                    if (hours === 0 && minutes === 0) {
+                        return showNotification('لطفا حداقل یک دقیقه وارد کنید');
+                    }
+                    setStudyRecords([...studyRecords, {
+                        ...formData,
+                        hours,
+                        minutes,
+                        id: Date.now(),
+                        timestamp: new Date().toISOString() // timestamp برای سازگاری با کدهای قدیمی‌تر نگه داشته شده
+                    }]);
+                    showNotification('ساعت مطالعه با موفقیت ثبت شد');
+                } else if (formType === 'test') {
+                    const correct = parseInt(formData.correct) || 0;
+                    const incorrect = parseInt(formData.incorrect) || 0;
+                    const unanswered = parseInt(formData.unanswered) || 0;
+                    const totalTests = correct + incorrect + unanswered;
+
+                    if (totalTests <= 0) {
+                        return showNotification('مجموع تست‌ها باید بیشتر از صفر باشد');
+                    }
+                    setTestRecords([...testRecords, {
+                        course: formData.course,
+                        date: formData.date,
+                        correct,
+                        incorrect,
+                        unanswered,
+                        id: Date.now(),
+                        timestamp: new Date().toISOString() // timestamp برای سازگاری
+                    }]);
+                    showNotification('آمار تست با موفقیت ثبت شد');
+                }
+        
+                setFormData({
+                    course: '',
+                    hours: '',
+                    minutes: '',
+                    correct: '',
+                    incorrect: '',
+                    unanswered: '',
+                    activityType: studyActivities[0]?.name || '',
+                    date: getTodayShamsiDate()
+                });
+            };
+        
+           return (
+              <div>
+                  <h1 className="page-title">ثبت آمار</h1>
+                  <div className="card">
+                    <div className="record-type-selector">
+                        <button 
+                            onClick={() => setFormType('study')} 
+                            className={`btn ${formType === 'study' ? '' : 'btn-secondary'}`}
+                        >
+                            ثبت ساعت مطالعه
+                        </button>
+                        <button 
+                            onClick={() => setFormType('test')} 
+                            className={`btn ${formType === 'test' ? '' : 'btn-secondary'}`}
+                        >
+                            ثبت تعداد تست
+                        </button>
+                    </div>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>درس</label>
+                            <select name="course" value={formData.course} onChange={handleInputChange}>
+                                <option value="">انتخاب کنید</option>
+                                {activeCourses.map(course => <option key={course.id} value={course.name}>{course.name}</option>)}
+                            </select>
+                        </div>
+                        
+                        {formType === 'study' && (
+                            <React.Fragment>
+                                <div className="form-group">
+                                    <label>نوع فعالیت</label>
+                                    <select name="activityType" value={formData.activityType} onChange={handleInputChange}>
+                                        {activeActivities.map(act => <option key={act.id} value={act.name}>{act.name}</option>)}
+                                    </select>
+                                </div>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>ساعت</label>
+                                        <input name="hours" type="number" min="0" value={formData.hours} onChange={handleInputChange} placeholder="0" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>دقیقه</label>
+                                        <input name="minutes" type="number" min="0" max="59" value={formData.minutes} onChange={handleInputChange} placeholder="0" />
+                                    </div>
+                                </div>
+                            </React.Fragment>
+                        )}
+                        
+                        {formType === 'test' && (
+                             <div className="form-grid" style={{gridTemplateColumns: '1fr 1fr 1fr'}}>
+                                <div className="form-group">
+                                    <label>تعداد صحیح</label>
+                                    <input name="correct" type="number" min="0" value={formData.correct} onChange={handleInputChange} placeholder="0" />
+                                </div>
+                                <div className="form-group">
+                                    <label>تعداد غلط</label>
+                                    <input name="incorrect" type="number" min="0" value={formData.incorrect} onChange={handleInputChange} placeholder="0" />
+                                </div>
+                                 <div className="form-group">
+                                    <label>تعداد نزده</label>
+                                    <input name="unanswered" type="number" min="0" value={formData.unanswered} onChange={handleInputChange} placeholder="0" />
+                                </div>
+                            </div>
+                        )}
+                        
+                        <div className="form-group">
+                            <label>تاریخ (مهم)</label>
+                            <input name="date" type="text" value={formData.date} onChange={handleInputChange} placeholder="مانند: 1404/06/23" />
+                        </div>
+                        <button type="submit" className="btn" style={{ width: "100%", marginTop: "10px" }}>ثبت</button>
+                    </form>
+                  </div>
+              </div>
+          );
+        }
+        
+        // ==================================================
+        // کامپوننت جدید و بازطراحی شده صفحه آمار
+        // ==================================================
+        function StatsPage({ studyRecords, testRecords, courses, goals, isDarkMode }) {
+            const [timeRange, setTimeRange] = useState('weekly');
+            const [currentDate, setCurrentDate] = useState(new Date());
+            const [activeTab, setActiveTab] = useState('overview');
+
+            const chartInstances = useRef({});
+            
+            const destroyCharts = () => {
+                Object.values(chartInstances.current).forEach(chart => {
+                    if (chart) chart.destroy();
+                });
+                chartInstances.current = {};
+            };
+            
+            const [dateRange, setDateRange] = useState(getDateRange(currentDate, 'weekly'));
+
+            useEffect(() => {
+                setDateRange(getDateRange(currentDate, timeRange));
+            }, [currentDate, timeRange]);
+            
+            const renderCharts = useCallback(() => {
+                destroyCharts();
+                
+                const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-1').trim();
+                const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-2').trim();
+                const redColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-3').trim();
+                const yellowColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-color-4').trim();
+                
+                const textColor = !isDarkMode ? '#202123' : '#E0E0E0';
+                Chart.defaults.color = textColor;
+                Chart.defaults.font.family = 'Vazirmatn';
+                Chart.defaults.borderColor = !isDarkMode ? '#E5E5E5' : '#333333';
+
+                // --- FIX: رکوردها دیگر در سطح بالا فیلتر نمی‌شوند ---
+                // const filteredStudyRecords = studyRecords.filter(...);
+                // const filteredTestRecords = testRecords.filter(...);
+
+                let barLabels = [];
+                const dailyData = {}; 
+                const orderedKeys = [];
+
+                if (timeRange === 'weekly') {
+                    barLabels = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+                    for (let i = 0; i < 7; i++) {
+                        const date = new Date(dateRange.start);
+                        date.setDate(date.getDate() + i);
+                        // --- FIX: استفاده از فرمت استاندارد شمسی ---
+                        const formattedDate = getShamsiDateString(date);
+                        dailyData[formattedDate] = { study: 0, test: 0 };
+                        orderedKeys.push(formattedDate);
+                    }
+                } else { // Monthly view
+                    const daysInMonth = dateRange.end.getDate();
+                    barLabels = []; // --- FIX: برچسب‌ها اینجا پر می‌شوند ---
+                    for (let i = 0; i < daysInMonth; i++) {
+                        const date = new Date(dateRange.start);
+                        date.setDate(date.getDate() + i);
+                        // --- FIX: استفاده از فرمت استاندارد شمسی ---
+                        const formattedDate = getShamsiDateString(date);
+                        // --- FIX: استخراج روز شمسی برای برچسب ---
+                        const shamsiDay = formattedDate.split('/')[2];
+                        barLabels.push(shamsiDay);
+                        dailyData[formattedDate] = { study: 0, test: 0 };
+                        orderedKeys.push(formattedDate);
+                    }
+                }
+
+                // --- FIX: فیلتر کردن و تجمیع بر اساس 'record.date' ---
+                studyRecords.forEach(record => {
+                    const recordDate = record.date; // استفاده از تاریخ شمسی ذخیره شده
+                    if (dailyData.hasOwnProperty(recordDate)) { // بررسی اینکه آیا تاریخ در بازه انتخابی ما هست
+                        dailyData[recordDate].study += (record.hours + record.minutes / 60);
+                    }
+                });
+                testRecords.forEach(record => {
+                    const recordDate = record.date; // استفاده از تاریخ شمسی ذخیره شده
+                    if (dailyData.hasOwnProperty(recordDate)) { // بررسی اینکه آیا تاریخ در بازه انتخابی ما هست
+                        dailyData[recordDate].test += (record.correct || 0) + (record.incorrect || 0) + (record.unanswered || 0);
+                    }
+                });
+                
+                const studyValues = orderedKeys.map(key => (dailyData[key]?.study || 0).toFixed(2));
+                const testValues = orderedKeys.map(key => dailyData[key]?.test || 0);
+
+                // 1. نمودار میله‌ای مطالعه (تب Overview)
+                const studyBarCtx = document.getElementById('studyBarChart')?.getContext('2d');
+                if(studyBarCtx) {
+                    chartInstances.current.studyBar = new Chart(studyBarCtx, {
+                        type: 'bar',
+                        data: { labels: barLabels, datasets: [{ label: 'ساعت مطالعه (ساعت)', data: studyValues, backgroundColor: primaryColor, borderRadius: 4, }] },
+                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { reverse: true } } }
+                    });
+                }
+
+                // 2. نمودار میله‌ای تست (تب Overview)
+                const testBarCtx = document.getElementById('testBarChart')?.getContext('2d');
+                if(testBarCtx) {
+                    chartInstances.current.testBar = new Chart(testBarCtx, {
+                        type: 'bar',
+                        data: { labels: barLabels, datasets: [{ label: 'تعداد تست', data: testValues, backgroundColor: secondaryColor, borderRadius: 4, }] },
+                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { reverse: true } } }
+                    });
+                }
+                
+                // 3. نمودار ترکیبی (تب Trends)
+                const combinedCtx = document.getElementById('combinedStudyTestChart')?.getContext('2d');
+                if(combinedCtx) {
+                    chartInstances.current.combined = new Chart(combinedCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: barLabels,
+                            datasets: [
+                                {
+                                    label: 'ساعت مطالعه',
+                                    data: studyValues,
+                                    backgroundColor: primaryColor + '90', // A bit transparent
+                                    borderColor: primaryColor,
+                                    yAxisID: 'yStudy',
+                                    order: 2
+                                },
+                                {
+                                    label: 'تعداد تست',
+                                    data: testValues,
+                                    type: 'line',
+                                    borderColor: secondaryColor,
+                                    backgroundColor: secondaryColor,
+                                    tension: 0.3,
+                                    yAxisID: 'yTest',
+                                    order: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { position: 'top' } },
+                            scales: {
+                                yStudy: {
+                                    type: 'linear',
+                                    position: 'right',
+                                    beginAtZero: true,
+                                    title: { display: true, text: 'ساعت مطالعه' }
+                                },
+                                yTest: {
+                                    type: 'linear',
+                                    position: 'left',
+                                    beginAtZero: true,
+                                    title: { display: true, text: 'تعداد تست' },
+                                    grid: { drawOnChartArea: false } // Only one grid
+                                },
+                                x: { reverse: true }
+                            }
+                        }
+                    });
+                }
+                
+                // 4. نمودارهای دایره‌ای (تب Trends)
+                // --- FIX: این آمارها باید بر اساس کل رکوردها باشند، نه رکوردهای فیلتر شده بر اساس timestamp ---
+                // (کد موجود از قبل کل رکوردها را پردازش می‌کرد، پس این بخش درست است)
+                const courseStudyMinutes = {};
+                studyRecords.forEach(record => {
+                    courseStudyMinutes[record.course] = (courseStudyMinutes[record.course] || 0) + record.hours * 60 + record.minutes;
+                });
+                const courseTests = {};
+                testRecords.forEach(record => {
+                    courseTests[record.course] = (courseTests[record.course] || 0) + (record.correct || 0) + (record.incorrect || 0) + (record.unanswered || 0);
+                });
+                const activityMinutes = {};
+                studyRecords.forEach(record => {
+                    const totalMins = record.hours * 60 + record.minutes;
+                    activityMinutes[record.activityType] = (activityMinutes[record.activityType] || 0) + totalMins;
+                });
+                const totalCorrectAllTime = testRecords.reduce((sum, r) => sum + (r.correct || 0), 0);
+                const totalIncorrectAllTime = testRecords.reduce((sum, r) => sum + (r.incorrect || 0), 0);
+                const totalUnansweredAllTime = testRecords.reduce((sum, r) => sum + (r.unanswered || 0), 0);
+
+                const pieOptions = { responsive: true, plugins: { legend: { position: 'bottom', labels: { padding: 10 } } } };
+                const pieColors = Object.keys(courseStudyMinutes).map(label => courses.find(c => c.name === label)?.color || getRandomColor());
+                const activityColors = [primaryColor, secondaryColor, yellowColor, getComputedStyle(document.documentElement).getPropertyValue('--chart-color-5').trim(), getComputedStyle(document.documentElement).getPropertyValue('--chart-color-6').trim()];
+
+                const studyPieCtx = document.getElementById('studyPieChart')?.getContext('2d');
+                if(studyPieCtx) {
+                    chartInstances.current.studyPie = new Chart(studyPieCtx, {
+                        type: 'pie',
+                        data: { labels: Object.keys(courseStudyMinutes), datasets: [{ data: Object.values(courseStudyMinutes), backgroundColor: pieColors, hoverOffset: 4 }] },
+                        options: pieOptions
+                    });
+                }
+
+                const testPieCtx = document.getElementById('testPieChart')?.getContext('2d');
+                if(testPieCtx) {
+                    chartInstances.current.testPie = new Chart(testPieCtx, {
+                        type: 'pie',
+                        data: { labels: Object.keys(courseTests), datasets: [{ data: Object.values(courseTests), backgroundColor: pieColors, hoverOffset: 4 }] },
+                        options: pieOptions
+                    });
+                }
+                
+                const activityPieCtx = document.getElementById('activityPieChart')?.getContext('2d');
+                if(activityPieCtx) {
+                    chartInstances.current.activityPie = new Chart(activityPieCtx, {
+                        type: 'doughnut',
+                        data: { labels: Object.keys(activityMinutes), datasets: [{ data: Object.values(activityMinutes), backgroundColor: activityColors, hoverOffset: 4 }] },
+                        options: pieOptions
+                    });
+                }
+
+                const testBreakdownCtx = document.getElementById('testBreakdownPieChart')?.getContext('2d');
+                if(testBreakdownCtx) {
+                    chartInstances.current.testBreakdown = new Chart(testBreakdownCtx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['صحیح', 'غلط', 'نزده'],
+                            datasets: [{
+                                data: [totalCorrectAllTime, totalIncorrectAllTime, totalUnansweredAllTime],
+                                backgroundColor: [primaryColor, redColor, yellowColor],
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: pieOptions
+                    });
+                }
+
+            }, [studyRecords, testRecords, dateRange, courses, timeRange, isDarkMode]);
+            
+            useEffect(() => {
+                renderCharts();
+                return () => destroyCharts();
+            }, [renderCharts, isDarkMode, activeTab]); // Re-render if tab changes (to mount new canvases)
+
+            const changeDate = (direction) => {
+                const newDate = new Date(currentDate);
+                if (timeRange === 'weekly') {
+                    newDate.setDate(newDate.getDate() + direction * 7);
+                } else {
+                    newDate.setMonth(newDate.getMonth() + direction);
+                }
+                setCurrentDate(newDate);
+            };
+            
+            // --- FIX: اطمینان از اینکه dateLabel از فرمت شمسی 'fa-IR' استفاده می‌کند ---
+            const dateLabel = timeRange === 'weekly' 
+                ? `${dateRange.start.toLocaleDateString('fa-IR')} تا ${dateRange.end.toLocaleDateString('fa-IR')}`
+                : currentDate.toLocaleDateString('fa-IR', { month: 'long', year: 'numeric' });
+
+            // --- FIX: محاسبه آمار دوره فعلی باید بر اساس تاریخ شمسی باشد ---
+            const currentPeriodStats = calculatePeriodStatsShamsi(studyRecords, testRecords, dateRange.start, dateRange.end);
+            const numDays = (dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24) + 1;
+            const dailyAvgMinutes = currentPeriodStats.totalMinutes / numDays;
+            
+            // آمار دوره قبلی
+            const prevStartDate = new Date(dateRange.start);
+            if (timeRange === 'weekly') {
+                prevStartDate.setDate(prevStartDate.getDate() - 7);
+            } else {
+                prevStartDate.setMonth(prevStartDate.getMonth() - 1);
+            }
+            const prevDateRange = getDateRange(prevStartDate, timeRange);
+            const prevPeriodStats = calculatePeriodStatsShamsi(studyRecords, testRecords, prevDateRange.start, prevDateRange.end);
+
+            return (
+                <div>
+                    <h1 className="page-title">تحلیل و آمار</h1>
+                    
+                    <div className="card" style={{ marginBottom: '20px' }}>
+                        <div className="chart-controls">
+                            <button onClick={() => changeDate(-1)}>« {timeRange === 'weekly' ? 'هفته' : 'ماه'} قبل</button>
+                            <span>{dateLabel}</span>
+                            <button onClick={() => changeDate(1)}>{timeRange === 'weekly' ? 'هفته' : 'ماه'} بعد »</button>
+                        </div>
+                         <div className="time-range-toggle">
+                            <button onClick={() => setTimeRange('weekly')} className={timeRange === 'weekly' ? 'active' : ''}>هفتگی</button>
+                            <button onClick={() => setTimeRange('monthly')} className={timeRange === 'monthly' ? 'active' : ''}>ماهانه</button>
+                        </div>
+                    </div>
+
+                    <div className="tabs">
+                        <button className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>نمای کلی</button>
+                        <button className={`tab-button ${activeTab === 'trends' ? 'active' : ''}`} onClick={() => setActiveTab('trends')}>روندها و تفکیک</button>
+                        <button className={`tab-button ${activeTab === 'comparison' ? 'active' : ''}`} onClick={() => setActiveTab('comparison')}>مقایسه</button>
+                    </div>
+
+                    <div className="tab-content">
+                        {/* --- Tab: Overview --- */}
+                        {activeTab === 'overview' && (
+                            <div>
+                                <div className="card" style={{ marginBottom: '20px' }}>
+                                    <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>شاخص‌های کلیدی {timeRange === 'weekly' ? 'هفته' : 'ماه'}</h2>
+                                    {/* <p style={{textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '-15px'}}>
+                                        (توجه: این بخش بر اساس timestamp کار می‌کند و ممکن است با نمودارهای روزانه که بر اساس تاریخ شمسی هستند متفاوت باشد)
+                                    </p> */}
+                                    <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                                        <div className="stat-card">
+                                            <div className="stat-value">{formatMinutes(currentPeriodStats.totalMinutes)}</div>
+                                            <div className="stat-label">مجموع مطالعه</div>
+                                        </div>
+                                        <div className="stat-card">
+                                            <div className="stat-value">{currentPeriodStats.totalTests.toLocaleString()}</div>
+                                            <div className="stat-label">مجموع تست</div>
+                                        </div>
+                                        <div className="stat-card">
+                                            {/* --- FIX: formatMinutes اکنون گرد می‌کند --- */}
+                                            <div className="stat-value">{formatMinutes(dailyAvgMinutes)}</div>
+                                            <div className="stat-label">میانگین روزانه</div>
+                                        </div>
+                                        <div className="stat-card">
+                                            <div className="stat-value" style={{color: 'var(--chart-color-2)'}}>{currentPeriodStats.accuracy.toFixed(1)}%</div>
+                                            <div className="stat-label">درصد دقت تست</div>
+                                        </div>
+                                        <div className="stat-card">
+                                            <div className="stat-value" style={{color: 'var(--chart-color-5)', fontSize: '1.3rem'}}>
+                                                {currentPeriodStats.peakDay ? `${currentPeriodStats.peakDay.date} (${formatMinutes(currentPeriodStats.peakDay.minutes)})` : '---'}
+                                            </div>
+                                            <div className="stat-label">روز اوج مطالعه</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card">
+                                    <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>آمار روزانه (بر اساس تاریخ شمسی ثبت شده)</h2>
+                                    <div className="chart-grid">
+                                        <div>
+                                            <h3 style={{ marginBottom: '10px', color: 'var(--text-title)', textAlign: 'center' }}>ساعت مطالعه (ساعت)</h3>
+                                            <canvas id="studyBarChart"></canvas>
+                                        </div>
+                                        <div>
+                                            <h3 style={{ marginBottom: '10px', color: 'var(--text-title)', textAlign: 'center' }}>تعداد تست</h3>
+                                            <canvas id="testBarChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* --- Tab: Trends & Breakdown --- */}
+                        {activeTab === 'trends' && (
+                            <div>
+                                <div className="card" style={{ marginBottom: '20px' }}>
+                                    <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>روند مطالعه و تست (دوره انتخابی)</h2>
+                                    <canvas id="combinedStudyTestChart"></canvas>
+                                </div>
+                                <div className="card">
+                                    <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>تفکیک آمار کلی (تمام وقت)</h2>
+                                    <div className="stats-overview-grid">
+                                        <div className="pie-chart-container">
+                                            <h3>تفکیک ساعت مطالعه</h3>
+                                            <canvas id="studyPieChart"></canvas>
+                                        </div>
+                                         <div className="pie-chart-container">
+                                            <h3>تفکیک تعداد تست (بر اساس درس)</h3>
+                                            <canvas id="testPieChart"></canvas>
+                                        </div>
+                                         <div className="pie-chart-container">
+                                            <h3>تفکیک فعالیت ها</h3>
+                                            <canvas id="activityPieChart"></canvas>
+                                        </div>
+                                         <div className="pie-chart-container">
+                                            <h3>تفکیک کلی تست‌ها</h3>
+                                            <canvas id="testBreakdownPieChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* --- Tab: Comparison --- */}
+                        {activeTab === 'comparison' && (
+                            <div className="card">
+                                <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>مقایسه با دوره قبل (بر اساس تاریخ شمسی)</h2>
+                                <div className="stats-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                                    <ComparisonMetric 
+                                        label="ساعت مطالعه"
+                                        current={currentPeriodStats.totalMinutes}
+                                        previous={prevPeriodStats.totalMinutes}
+                                        formatter={formatMinutes}
+                                    />
+                                    <ComparisonMetric 
+                                        label="تعداد تست"
+                                        current={currentPeriodStats.totalTests}
+                                        previous={prevPeriodStats.totalTests}
+                                        formatter={val => val.toLocaleString()}
+                                    />
+                                    <ComparisonMetric 
+                                        label="درصد دقت تست"
+                                        current={currentPeriodStats.accuracy}
+                                        previous={prevPeriodStats.accuracy}
+                                        formatter={val => `${val.toFixed(1)}%`}
+                                    />
+                                    <ComparisonMetric 
+                                        label="تست‌های صحیح"
+                                        current={currentPeriodStats.totalCorrect}
+                                        previous={prevPeriodStats.totalCorrect}
+                                        formatter={val => val.toLocaleString()}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+        
+        // کامپوننت کمکی برای کارت‌های مقایسه
+        const ComparisonMetric = ({ label, current, previous, formatter }) => {
+            const change = current - previous;
+            const percentChange = previous !== 0 ? (change / previous) * 100 : (current > 0 ? 100 : 0);
+            const changeType = change > 0 ? 'positive' : (change < 0 ? 'negative' : '');
+            
+            return (
+                <div className={`comparison-card ${changeType}`}>
+                    <div className="comparison-label">{label}</div>
+                    <div className="comparison-main-value">{formatter(current)}</div>
+                    <div className={`comparison-change ${changeType}`}>
+                        {changeType === 'positive' && '▲'}
+                        {changeType === 'negative' && '▼'}
+                        {formatter(Math.abs(change))}
+                        <span style={{fontSize: '0.8rem', marginRight: '5px'}}>({percentChange.toFixed(0)}%)</span>
+                    </div>
+                    <div style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
+                        دوره قبل: {formatter(previous)}
+                    </div>
+                </div>
+            );
+        };
+
+        
+        // ==================================================
+        // کامپوننت بازطراحی شده مدیریت آمار
+        // ==================================================
+        function ManageStatsPage({ studyRecords, setStudyRecords, testRecords, setTestRecords, courses, studyActivities, showNotification }) {
+            const [editingRecord, setEditingRecord] = useState(null);
+            const [recordToDelete, setRecordToDelete] = useState(null);
+            const [filters, setFilters] = useState({ date: '', course: '', activityType: '' });
+
+            const handleFilterChange = (e) => {
+                setFilters({ ...filters, [e.target.name]: e.target.value });
+            };
+
+            const allRecords = [
+                ...studyRecords.map(r => ({ ...r, type: 'study' })),
+                ...testRecords.map(r => ({ ...r, type: 'test' }))
+            ].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            const filteredRecords = allRecords.filter(record => {
+                if (filters.course && record.course !== filters.course) return false;
+                if (record.type === 'study' && filters.activityType && record.activityType !== filters.activityType) return false;
+                if (record.type === 'test' && filters.activityType) return false;
+                if (filters.date && !record.date.includes(filters.date)) return false;
+                return true;
+            });
+
+            const handleUpdateRecord = () => {
+                if (!editingRecord) return;
+
+                if (editingRecord.type === 'study') {
+                    const updatedRecords = studyRecords.map(r => 
+                        r.id === editingRecord.id ? { ...editingRecord, hours: parseInt(editingRecord.hours) || 0, minutes: parseInt(editingRecord.minutes) || 0 } : r
+                    );
+                    setStudyRecords(updatedRecords);
+                } else {
+                    const updatedRecords = testRecords.map(r => 
+                        r.id === editingRecord.id ? { ...editingRecord, correct: parseInt(editingRecord.correct) || 0, incorrect: parseInt(editingRecord.incorrect) || 0, unanswered: parseInt(editingRecord.unanswered) || 0 } : r
+                    );
+                    setTestRecords(updatedRecords);
+                }
+                showNotification('آمار با موفقیت ویرایش شد');
+                setEditingRecord(null);
+            };
+
+            const handleDeleteRecord = () => {
+                if (!recordToDelete) return;
+
+                if (recordToDelete.type === 'study') {
+                    setStudyRecords(studyRecords.filter(r => r.id !== recordToDelete.id));
+                } else {
+                    setTestRecords(testRecords.filter(r => r.id !== recordToDelete.id));
+                }
+                showNotification('آمار با موفقیت حذف شد');
+                setRecordToDelete(null);
+            };
+
+            const activeCourses = courses.filter(c => !c.isArchived);
+            const activeActivities = studyActivities.filter(a => !a.isArchived);
+
+            const renderRecordItem = (record) => {
+                const courseColor = courses.find(c => c.name === record.course)?.color || 'var(--primary-color)';
+                const isTest = record.type === 'test';
+                return (
+                    <div key={record.id} className={`record-card ${isTest ? 'test-record' : ''}`} style={{ borderRightColor: isTest ? 'var(--chart-color-2)' : courseColor }}>
+                        <div className="record-card-header">
+                            <span className="record-card-header-title">
+                                {record.course}
+                            </span>
+                            <span className="record-card-header-date">{record.date}</span>
+                        </div>
+                        
+                        <div className="record-card-body">
+                            {isTest ? (
+                                <div className="record-card-body-test">
+                                    <div>{record.correct || 0} <span>صحیح</span></div>
+                                    <div>{record.incorrect || 0} <span>غلط</span></div>
+                                    <div>{record.unanswered || 0} <span>نزده</span></div>
+                                </div>
+                            ) : (
+                                <div className="record-card-body-study">
+                                    {formatMinutes((record.hours * 60) + record.minutes)}
+                                    <span>({record.activityType})</span>
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="record-card-actions">
+                            <button onClick={() => setEditingRecord(record)} className="btn btn-small btn-warning">ویرایش</button>
+                            <button onClick={() => setRecordToDelete(record)} className="btn btn-small btn-danger">حذف</button>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div>
+                    <h1 className="page-title">مدیریت آمار ثبت شده</h1>
+                    
+                    <div className="card" style={{ marginBottom: '20px' }}>
+                        <h3 style={{ marginTop: 0 }}>فیلتر و جستجو</h3>
+                        <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
+                            <div className="form-group">
+                                <label>جستجو بر اساس تاریخ</label>
+                                <input type="text" name="date" value={filters.date} onChange={handleFilterChange} placeholder="مثلا: 1403/05/20" />
+                            </div>
+                            <div className="form-group">
+                                <label>فیلتر بر اساس درس</label>
+                                <select name="course" value={filters.course} onChange={handleFilterChange}>
+                                    <option value="">همه درس‌ها</option>
+                                    {activeCourses.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                                </select>
+                            </div>
+                             <div className="form-group">
+                                <label>فیلتر بر اساس فعالیت (فقط مطالعه)</label>
+                                <select name="activityType" value={filters.activityType} onChange={handleFilterChange}>
+                                    <option value="">همه فعالیت‌ها</option>
+                                    {activeActivities.map(a => <option key={a.id} value={a.name}>{a.name}</option>)}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="manage-stats-grid">
+                        {filteredRecords.length > 0 ? filteredRecords.map(renderRecordItem) : <p style={{ textAlign: 'center', color: 'var(--text-secondary)', gridColumn: '1 / -1' }}>هیچ آماری مطابق با فیلتر شما یافت نشد.</p>}
+                    </div>
+
+                    {editingRecord && (
+                        <div className="overlay show" onClick={() => setEditingRecord(null)}>
+                            <div className="card" onClick={(e) => e.stopPropagation()} style={{ width: '90%', maxWidth: '500px' }}>
+                                <h3>ویرایش آمار</h3>
+                                <div className="form-group">
+                                    <label>درس</label>
+                                    <select value={editingRecord.course} onChange={e => setEditingRecord({ ...editingRecord, course: e.target.value })}>
+                                        <option value="">انتخاب کنید</option>
+                                        {activeCourses.map(course => <option key={course.id} value={course.name}>{course.name}</option>)}
+                                    </select>
+                                </div>
+                                {editingRecord.type === 'study' && (
+                                    <React.Fragment>
+                                        <div className="form-group">
+                                            <label>نوع فعالیت</label>
+                                            <select value={editingRecord.activityType} onChange={e => setEditingRecord({ ...editingRecord, activityType: e.target.value })}>
+                                                {activeActivities.map(act => <option key={act.id} value={act.name}>{act.name}</option>)}
+                                            </select>
+                                        </div>
+                                        <div className="form-grid">
+                                            <div className="form-group">
+                                                <label>ساعت</label>
+                                                <input type="number" min="0" value={editingRecord.hours} onChange={e => setEditingRecord({ ...editingRecord, hours: e.target.value })} />
+                                            </div>
+                                            <div className="form-group">
+                                                <label>دقیقه</label>
+                                                <input type="number" min="0" max="59" value={editingRecord.minutes} onChange={e => setEditingRecord({ ...editingRecord, minutes: e.target.value })} />
+                                            </div>
+                                        </div>
+                                    </React.Fragment>
+                                )}
+                                {editingRecord.type === 'test' && (
+                                    <div className="form-grid" style={{gridTemplateColumns: '1fr 1fr 1fr'}}>
+                                        <div className="form-group">
+                                            <label>صحیح</label>
+                                            <input type="number" min="0" value={editingRecord.correct} onChange={e => setEditingRecord({ ...editingRecord, correct: e.target.value })} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>غلط</label>
+                                            <input type="number" min="0" value={editingRecord.incorrect} onChange={e => setEditingRecord({ ...editingRecord, incorrect: e.target.value })} />
+                                        </div>
+                                         <div className="form-group">
+                                            <label>نزده</label>
+                                            <input type="number" min="0" value={editingRecord.unanswered} onChange={e => setEditingRecord({ ...editingRecord, unanswered: e.target.value })} />
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="form-group">
+                                    <label>تاریخ</label>
+                                    <input type="text" value={editingRecord.date} onChange={e => setEditingRecord({ ...editingRecord, date: e.target.value })} />
+                                </div>
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                                    <button onClick={handleUpdateRecord} className="btn">ذخیره</button>
+                                    <button onClick={() => setEditingRecord(null)} className="btn btn-secondary">لغو</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {recordToDelete && (
+                         <div className="overlay show" onClick={() => setRecordToDelete(null)}>
+                            <div className="card" onClick={(e) => e.stopPropagation()} style={{ width: '90%', maxWidth: '400px', textAlign: 'center' }}>
+                                <h3 style={{color: '#dc3545'}}>تایید حذف</h3>
+                                <p>آیا از حذف این آمار اطمینان دارید؟ این عملیات غیرقابل بازگشت است.</p>
+                                 <div style={{ display: 'flex', gap: '10px', marginTop: '20px', justifyContent: 'center' }}>
+                                    <button onClick={handleDeleteRecord} className="btn btn-danger">بله، حذف کن</button>
+                                    <button onClick={() => setRecordToDelete(null)} className="btn btn-secondary">لغو</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        function SchedulePage({ courses, weeklySchedule, setWeeklySchedule, studyActivities, showNotification }) {
+            const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+            const [selectedDay, setSelectedDay] = useState('');
+            const [scheduleForm, setScheduleForm] = useState({ 
+                course: '', 
+                activityType: studyActivities[0]?.name || '', 
+                duration: 60
+            });
+            
+            const today = new Date();
+            const dayIndex = today.getDay();
+            const persianDayIndex = dayIndex === 6 ? 0 : dayIndex + 1;
+            const currentDay = days[persianDayIndex];
+            
+            const activeCourses = courses.filter(c => !c.isArchived);
+            const activeActivities = studyActivities.filter(a => !a.isArchived);
+
+            const handleFormChange = (e) => {
+                setScheduleForm({ ...scheduleForm, [e.target.name]: e.target.value });
+            };
+
+            const addScheduleItem = () => {
+                if (!selectedDay || !scheduleForm.course) return;
+                
+                const duration = parseInt(scheduleForm.duration) || 60;
+
+                if (duration <= 0) {
+                    showNotification('مدت زمان باید بیشتر از صفر باشد.');
+                    return;
+                }
+
+                const newItem = {...scheduleForm, duration, id: Date.now()};
+                const daySchedule = weeklySchedule[selectedDay] || [];
+                const updatedDaySchedule = [...daySchedule, newItem];
+                setWeeklySchedule({...weeklySchedule, [selectedDay]: updatedDaySchedule});
+                showNotification('برنامه با موفقیت اضافه شد');
+            };
+
+            const removeScheduleItem = (day, itemId) => {
+                const daySchedule = weeklySchedule[day] || [];
+                setWeeklySchedule({...weeklySchedule, [day]: daySchedule.filter(item => item.id !== itemId)});
+            };
+            
+            return (
+                <div>
+                    <h1 className="page-title">برنامه هفتگی</h1>
+                    
+                    <div className="card">
+                        <h3 style={{fontSize: '16px', marginBottom: '15px'}}>افزودن به برنامه</h3>
+                        <div className="form-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                            <div className="form-group">
+                                <label>روز هفته</label>
+                                <select name="selectedDay" value={selectedDay} onChange={e => setSelectedDay(e.target.value)}>
+                                    <option value="">انتخاب کنید</option>
+                                    {days.map(day => <option key={day} value={day}>{day}</option>)}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>درس</label>
+                                <select name="course" value={scheduleForm.course} onChange={handleFormChange}>
+                                    <option value="">انتخاب کنید</option>
+                                    {activeCourses.map(course => <option key={course.id} value={course.name}>{course.name}</option>)}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>نوع فعالیت</label>
+                                <select name="activityType" value={scheduleForm.activityType} onChange={handleFormChange}>
+                                   {activeActivities.map(act => <option key={act.id} value={act.name}>{act.name}</option>)}
+                                </select>
+                            </div>
+                             <div className="form-group">
+                                <label>مدت زمان (دقیقه)</label>
+                                <input type="number" name="duration" min="1" value={scheduleForm.duration} onChange={handleFormChange} />
+                            </div>
+                        </div>
+                        <button onClick={addScheduleItem} className="btn btn-small">افزودن به برنامه</button>                    
+                    </div>
+                    <div className="schedule-grid">
+                        {days.map(day => {
+                            const dayItems = weeklySchedule[day] || [];
+                            const totalMinutes = dayItems.reduce((sum, item) => sum + (item.duration || 0), 0);
+                            return (
+                                <div key={day} className={`day-column ${day === currentDay ? 'today-column' : ''}`}>
+                                    <div className={`day-header ${day === currentDay ? 'today' : ''}`}>
+                                        {day}
+                                        {totalMinutes > 0 && <div className="day-header-info">{formatMinutes(totalMinutes)}</div>}
+                                    </div>
+                                    {dayItems.map(item => {
+                                        const courseColor = courses.find(c => c.name === item.course)?.color || 'var(--primary-color)';
+                                        return (
+                                            <div key={item.id} className="schedule-item" style={{ borderRightColor: courseColor }}>
+                                                <div><strong>{item.course}</strong></div>
+                                                <div className="course-details">{item.activityType}</div>
+                                                <div className="course-details">{item.duration} دقیقه</div>
+                                                <button onClick={() => removeScheduleItem(day, item.id)} className="delete-course" style={{marginTop: '5px'}}>×</button>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            );
+        }
+        
+        function App() {
+            const initialCourses = [
+                { id: 1, name: 'ریاضی', color: '#5DADE2', isArchived: false },
+                { id: 2, name: 'فیزیک', color: '#79a1f2', isArchived: false },
+                { id: 3, name: 'شیمی', color: 'var(--primary-color)', isArchived: false }
+            ];
+            
+            const defaultActivities = ['آموزش', 'مرور', 'حل تمرین', 'حل تست', 'آزمون'];
+            const initialActivities = defaultActivities.map((name, index) => ({ id: index + 1, name, isArchived: false }));
+
+            const [isDarkMode, setIsDarkMode] = useLocalStorage('isDarkMode', 
+                window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+            );
+            const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+            useEffect(() => {
+                document.body.className = isDarkMode ? '' : 'light-mode';
+            }, [isDarkMode]);
+
+            const [currentPage, setCurrentPage] = useState('home');
+            const [courses, setCourses] = useLocalStorage('courses', initialCourses);
+            const [studyRecords, setStudyRecords] = useLocalStorage('studyRecords', []);
+            const [testRecords, setTestRecords] = useLocalStorage('testRecords', []);
+            const [weeklySchedule, setWeeklySchedule] = useLocalStorage('weeklySchedule', {});
+            const [studyActivities, setStudyActivities] = useLocalStorage('studyActivities', initialActivities);
+            const [goals, setGoals] = useLocalStorage('goals_v2', []);
+            const [notification, setNotification] = useState('');
+            const [streak, setStreak] = useState(0);
+
+            const showNotification = (message) => {
+                setNotification(message);
+                setTimeout(() => setNotification(''), 3000);
+            };
+
+            useEffect(() => {
+                const allRecords = [...studyRecords, ...testRecords];
+                if (allRecords.length === 0) {
+                    setStreak(0);
+                    return;
+                }
+
+                const uniqueDates = [...new Set(allRecords.map(r => r.date))].sort();
+                
+                let currentStreak = 0;
+                const today = new Date();
+                const yesterday = new Date();
+                yesterday.setDate(today.getDate() - 1);
+
+                const todayStr = getShamsiDateString(today);
+                const yesterdayStr = getShamsiDateString(yesterday);
+                
+                if (uniqueDates.includes(todayStr) || uniqueDates.includes(yesterdayStr)) {
+                    let lastDate = new Date();
+                    if (!uniqueDates.includes(todayStr)) {
+                        lastDate.setDate(today.getDate() - 1);
+                    }
+                    
+                    while(true) {
+                        const dateToCheckStr = getShamsiDateString(lastDate);
+                        if (uniqueDates.includes(dateToCheckStr)) {
+                            currentStreak++;
+                            lastDate.setDate(lastDate.getDate() - 1); 
+                        } else {
+                            break; 
+                        }
+                    }
+                }
+                
+                setStreak(currentStreak);
+            }, [studyRecords, testRecords]);
+
+            const exportData = () => {
+                const data = {
+                    courses, studyRecords, testRecords, weeklySchedule, studyActivities, goals_v2: goals,
+                    exportDate: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `study_data_${new Date().toLocaleDateString('fa-IR-u-nu-latn').replace(/\//g, '-')}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showNotification('فایل پشتیبان با موفقیت ذخیره شد');
+            };
+
+            const importData = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            setCourses(data.courses || []);
+                            setStudyRecords(data.studyRecords || []);
+                            setTestRecords(data.testRecords || []);
+                            setWeeklySchedule(data.weeklySchedule || {});
+                            setStudyActivities(data.studyActivities || initialActivities);
+                            setGoals(data.goals_v2 || data.goals || []);
+                            showNotification('اطلاعات با موفقیت بازیابی شد');
+                        } catch (error) {
+                            showNotification('خطا در خواندن فایل پشتیبان');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            
+            const clearAllData = () => {
+                // استفاده از یک پاپ‌آپ ساده به جای window.prompt که ممکن است بلاک شود
+                setNotification('برای تایید حذف، دوباره کلیک کنید.');
+                // این یک تایید ساده است، برای امنیت بیشتر باید از مودال استفاده کرد
+                // اما برای سادگی، یک راه حل موقت
+                const originalClick = document.body.onclick;
+                document.body.onclick = () => {
+                    localStorage.clear();
+                    setCourses(initialCourses);
+                    setStudyRecords([]);
+                    setTestRecords([]);
+                    setWeeklySchedule({});
+                    setStudyActivities(initialActivities);
+                    setGoals([]);
+                    showNotification('تمام داده‌ها با موفقیت حذف شدند.');
+                    window.location.reload();
+                    document.body.onclick = originalClick;
+                };
+                setTimeout(() => {
+                    document.body.onclick = originalClick;
+                    setNotification('');
+                }, 5000);
+            };
+            
+            const renderPage = () => {
+                switch(currentPage) {
+                    case 'home':
+                        return <HomePage 
+                                    weeklySchedule={weeklySchedule} 
+                                    studyRecords={studyRecords} 
+                                    testRecords={testRecords} 
+                                    courses={courses} 
+                                    streak={streak} 
+                                    goals={goals}
+                                />;
+                    case 'record-stats':
+                        return <RecordStatsPage courses={courses} studyRecords={studyRecords} setStudyRecords={setStudyRecords} testRecords={testRecords} setTestRecords={setTestRecords} showNotification={showNotification} studyActivities={studyActivities} />;
+                    case 'stats':
+                        return <StatsPage studyRecords={studyRecords} testRecords={testRecords} courses={courses} goals={goals} isDarkMode={isDarkMode} />;
+                    case 'manage-stats':
+                        return <ManageStatsPage 
+                                    studyRecords={studyRecords} setStudyRecords={setStudyRecords} 
+                                    testRecords={testRecords} setTestRecords={setTestRecords} 
+                                    courses={courses} studyActivities={studyActivities} showNotification={showNotification} 
+                                />;
+                    case 'schedule':
+                        return <SchedulePage courses={courses} weeklySchedule={weeklySchedule} setWeeklySchedule={setWeeklySchedule} studyActivities={studyActivities} showNotification={showNotification} />;
+                    // --- FIX: case 'timer' حذف شد ---
+                    case 'goals':
+                        return <GoalsPage goals={goals} setGoals={setGoals} studyRecords={studyRecords} testRecords={testRecords} courses={courses} showNotification={showNotification} />;
+                    case 'courses':
+                        return <CoursesPage courses={courses} setCourses={setCourses} studyActivities={studyActivities} setStudyActivities={setStudyActivities} studyRecords={studyRecords} showNotification={showNotification} />;
+                    case 'settings':
+                        return <SettingsPage 
+                                    exportData={exportData} importData={importData} clearAllData={clearAllData} 
+                                    isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}
+                                    showNotification={showNotification}
+                                />;
+                    default:
+                        return <HomePage 
+                                    weeklySchedule={weeklySchedule} 
+                                    studyRecords={studyRecords} 
+                                    testRecords={testRecords} 
+                                    courses={courses} 
+                                    streak={streak} 
+                                    goals={goals}
+                                />;
+                }
+            };
+
+            // آیتم‌های سایدبار با آیکون‌های SVG
+            const sidebarItems = [
+                { id: 'home', label: 'میز مطالعه', icon: <IconHome /> },
+                // --- FIX: آیتم 'timer' حذف شد ---
+                { divider: true },
+                { id: 'record-stats', label: 'ثبت آمار', icon: <IconRecord /> },
+                { id: 'stats', label: 'مشاهده آمار', icon: <IconStats /> },
+                { id: 'manage-stats', label: 'مدیریت آمار', icon: <IconManage /> },
+                { divider: true },
+                { id: 'schedule', label: 'برنامه هفتگی', icon: <IconSchedule /> },
+                { id: 'courses', label: 'مدیریت', icon: <IconCourses /> },
+                { divider: true },
+                { id: 'goals', label: 'اهداف', icon: <IconGoals /> },
+                { id: 'settings', label: 'تنظیمات', icon: <IconSettings /> }
+            ];
+
+            return (
+                <React.Fragment>
+                    {notification && <div className="notification">{notification}</div>}
+                    <div className="app-container">
+                        <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                             <div className="sidebar-header">
+                                { !isSidebarCollapsed && (
+                                    <h2 className="sidebar-title">مدیریت مطالعه</h2>
+                                )}
+                                <button className="sidebar-toggle-btn" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
+                                    {isSidebarCollapsed ? <IconMenu /> : <IconClose />}
+                                </button>
+                            </div>
+                            {sidebarItems.map((item, index) => (
+                                item.divider ? (
+                                    <div key={`divider-${index}`} className="sidebar-divider"></div>
+                                ) : (
+                                    <div key={item.id} 
+                                        className={`sidebar-item ${currentPage === item.id ? 'active' : ''}`}
+                                        onClick={() => setCurrentPage(item.id)}
+                                        title={isSidebarCollapsed ? item.label : ''}
+                                    >
+                                        {item.icon}
+                                        <span className="sidebar-item-label">{item.label}</span>
+                                    </div>
+                                )
+                            ))}
+                            <div className="sidebar-footer">
+                                {streak > 0 && (
+                                    <div style={{marginBottom: '10px'}} title={`${streak} روز متوالی`}>
+                                        🔥 {streak}
+                                    </div>
+                                )}
+                                {!isSidebarCollapsed && (
+                                    <div>با ❤️ برای کنکوری‌ها</div>
+                                )}
+                            </div>
+                        </aside>
+                        <main className="main-content">
+                            {renderPage()}
+                        </main>
+                    </div>
+                </React.Fragment>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('app'));
+    </script>
+    
+    <!-- اسکریپت ثبت Service Worker برای PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            const swContent = `
+                const CACHE_NAME = 'study-manager-cache-v2';
+                const urlsToCache = [
+                    '.', // Alias for index.html
+                    'https://unpkg.com/react@18/umd/react.production.min.js',
+                    'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
+                    'https://unpkg.com/@babel/standalone/babel.min.js',
+                    'https://cdn.jsdelivr.net/npm/chart.js',
+                    'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap'
+                ];
+
+                self.addEventListener('install', event => {
+                    self.skipWaiting();
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then(cache => cache.addAll(urlsToCache))
+                    );
+                });
+                
+                self.addEventListener('activate', event => {
+                    event.waitUntil(
+                        caches.keys().then(cacheNames => {
+                            return Promise.all(
+                                cacheNames.filter(cacheName => cacheName !== CACHE_NAME)
+                                          .map(cacheName => caches.delete(cacheName))
+                            );
+                        })
+                    );
+                });
+
+                self.addEventListener('fetch', event => {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then(response => {
+                                // Cache-First
+                                return response || fetch(event.request).then(fetchResponse => {
+                                    // Optional: Cache new requests dynamically
+                                    // return caches.open(CACHE_NAME).then(cache => {
+                                    //    cache.put(event.request, fetchResponse.clone());
+                                    //    return fetchResponse;
+                                    // });
+                                    return fetchResponse;
+                                });
+                            })
+                    );
+                });
+            `;
+            const swBlob = new Blob([swContent], {type: 'application/javascript'});
+            const swUrl = URL.createObjectURL(swBlob);
+            
+            window.addEventListener('load', () => {
+                 navigator.serviceWorker.register(swUrl)
+                    .then(reg => console.log('Service worker registered.', reg))
+                    .catch(err => console.log('Service worker registration failed:', err));
+            });
+        }
+    </script>
+</body>
+</html>
