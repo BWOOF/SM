@@ -2,12 +2,11 @@
 <html lang="fa" dir="rtl">
 <head>
 
-    <link rel="icon" type="image/jpeg" href="https://static.vecteezy.com/system/resources/previews/034/476/511/non_2x/book-icon-textbook-library-study-literature-education-knowledge-learning-symbol-sign-free-vector.jpg">
+<link rel="icon" type="image/png" href="icon.png">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>برنامه مدیریت مطالعه</title>
-    <!-- تم و مانیفست PWA -->
     <meta name="theme-color" content="#10A37F"/>
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,{
         &quot;name&quot;: &quot;برنامه مدیریت مطالعه&quot;,
@@ -23,15 +22,14 @@
             { &quot;src&quot;: &quot;https://cdn-icons-png.flaticon.com/512/3176/3176298.png&quot;, &quot;type&quot;: &quot;image/png&quot;, &quot;sizes&quot;: &quot;512x512&quot; }
         ]
     }">
-    <!-- فونت -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- استایل‌های CSS -->
     <style>
         html {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         :root {
@@ -39,17 +37,15 @@
             --primary-color-hover: #0c8763;
             --primary-color-rgb: 16, 163, 127;
             
-            /* متغیرهای رنگی نمودار */
-            --chart-color-1: #10A37F; /* Primary */
-            --chart-color-2: #3498db; /* Blue */
-            --chart-color-3: #e74c3c; /* Red */
-            --chart-color-4: #f1c40f; /* Yellow */
-            --chart-color-5: #9b59b6; /* Purple */
-            --chart-color-6: #e67e22; /* Orange */
+            --chart-color-1: #10A37F;
+            --chart-color-2: #3498db;
+            --chart-color-3: #e74c3c;
+            --chart-color-4: #f1c40f;
+            --chart-color-5: #9b59b6;
+            --chart-color-6: #e67e22;
         }
 
         :root {
-            /* Dark Mode (Default) */
             --bg-primary: #1e1e1e;
             --bg-secondary: #2a2a2a;
             --bg-sidebar: #181818;
@@ -79,7 +75,6 @@
         }
 
         .light-mode {
-            /* Light Mode */
             --bg-primary: #F0F2F5;
             --bg-secondary: #FFFFFF;
             --bg-sidebar: #FFFFFF;
@@ -108,7 +103,6 @@
             --color-negative: #c82333;
         }
 
-        /* Custom Scrollbar Styles */
         ::-webkit-scrollbar {
             width: 0.5rem;
             height: 0.5rem;
@@ -124,7 +118,6 @@
             background-color: var(--scrollbar-thumb-hover);
         }
 
-        /* Styles for Overall Stats Component */
         @keyframes gradient-animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .animated-bg-style { background: linear-gradient(-45deg, #181818, #2a2a2a, #101010, #3c3c3c); background-size: 400% 400%; animation: gradient-animation 15s ease infinite; border-radius: 1.25rem; box-shadow: 0 8px 25px rgba(0,0,0,0.25); }
         .light-mode .animated-bg-style { background: linear-gradient(-45deg, #f0f2f5, #ffffff, #e8eaed, #f0f2f5); box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: var(--text-primary); }
@@ -495,7 +488,6 @@
             color: var(--text-secondary);
         }
 
-        /* --- استایل‌های جدید صفحه آمار --- */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -599,7 +591,6 @@
         .stats-details-container li:last-child {
             border-bottom: none;
         }
-        /* --- پایان استایل‌های جدید صفحه آمار --- */
 
 
         .timer-page-container {
@@ -638,7 +629,6 @@
             min-width: 8rem;
         }
         
-        /* استایل‌های جدید زمان‌سنج */
         .timer-type-selector {
             display: flex;
             justify-content: center;
@@ -659,7 +649,6 @@
             margin-bottom: 1rem;
             color: var(--text-title);
         }
-        /* --- */
         
         .notification {
             position: fixed;
@@ -984,7 +973,6 @@
             justify-content: center;
         }
         
-        /* استایل‌های جدید مدیریت آمار */
         .manage-stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -1051,7 +1039,6 @@
             gap: 0.5rem;
             margin-top: auto;
         }
-        /* --- */
         
         .overlay {
             position: fixed;
@@ -1073,23 +1060,18 @@
             visibility: visible;
         }
     </style>
-    <!-- کتابخانه چارت -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- محتوای برنامه ری‌اکت -->
     <div id="app"></div>
     
-    <!-- کتابخانه‌های ری‌اکت و بابل -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- کد ری‌اکت (Babel) -->
     <script type="text/babel">
         const { useState, useEffect, useRef, useCallback } = React;
 
-        // --- Custom Hook for Local Storage ---
         function useLocalStorage(key, initialValue) {
             const [value, setValue] = useState(() => {
                 try {
@@ -1112,7 +1094,6 @@
             return [value, setValue];
         }
 
-        // --- Utility Functions ---
         const getRandomColor = () => {
             const letters = '0123456789ABCDEF';
             let color = '#';
@@ -1123,7 +1104,6 @@
         };
         
         const getShamsiDateString = (date) => {
-             // فرمت استاندارد YYYY/MM/DD با اعداد لاتین برای سازگاری
              return date.toLocaleDateString('fa-IR-u-nu-latn', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+)/, '$1/$2/$3');
         };
 
@@ -1133,7 +1113,6 @@
         
         const formatMinutes = (minutes) => `${Math.floor(minutes/60)} ساعت و ${Math.round(minutes % 60)} دقیقه`;
         
-        // تابع کمکی برای دریافت بازه تاریخی
         const getDateRange = (date, period) => {
             const d = new Date(date);
             if (period === 'weekly') {
@@ -1152,10 +1131,9 @@
                 end.setHours(23, 59, 59, 999);
                 return { start, end };
             }
-            return { start: new Date(0), end: new Date() }; // Default/All-time (not used here)
+            return { start: new Date(0), end: new Date() };
         };
         
-        // تابع کمکی برای محاسبه آمار (بر اساس Timestamp)
         const calculatePeriodStats = (studyRecords, testRecords, startDate, endDate) => {
             const periodStudy = studyRecords.filter(r => {
                 const recordDate = new Date(r.timestamp);
@@ -1174,7 +1152,6 @@
             const totalAttempted = totalCorrect + totalIncorrect;
             const accuracy = totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
             
-            // پیدا کردن روز اوج مطالعه
             const dailyStudy = {};
             periodStudy.forEach(r => {
                 const date = r.date;
@@ -1195,16 +1172,16 @@
             };
         };
 
-        // تابع کمکی برای محاسبه آمار (بر اساس تاریخ شمسی)
-        const calculatePeriodStatsShamsi = (studyRecords, testRecords, startDate, endDate) => {
-            // startDate and endDate are Gregorian Date objects
+        const calculatePeriodStatsShamsi = (studyRecords, testRecords, startDate, endDate, courseName = 'all') => {
             const shamsiStart = getShamsiDateString(startDate);
             const shamsiEnd = getShamsiDateString(endDate);
 
             const periodStudy = studyRecords.filter(r => {
+                if (courseName !== 'all' && r.course !== courseName) return false;
                 return r.date >= shamsiStart && r.date <= shamsiEnd;
             });
             const periodTests = testRecords.filter(r => {
+                if (courseName !== 'all' && r.course !== courseName) return false;
                 return r.date >= shamsiStart && r.date <= shamsiEnd;
             });
 
@@ -1216,7 +1193,6 @@
             const totalAttempted = totalCorrect + totalIncorrect;
             const accuracy = totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
             
-            // پیدا کردن روز اوج مطالعه
             const dailyStudy = {};
             periodStudy.forEach(r => {
                 const date = r.date;
@@ -1237,9 +1213,7 @@
             };
         };
 
-        // --- کامپوننت‌های آیکون SVG ---
         const IconHome = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10 0h3a1 1 0 001-1V10M9 20h6V12H9v8z" /></svg>;
-        // const IconTimer = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>; // حذف شد
         const IconRecord = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>;
         const IconStats = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6m4 0V7a2 2 0 00-2-2h-2a2 2 0 00-2 2v12a2 2 0 002 2h2a2 2 0 002-2z" /></svg>;
         const IconManage = () => <svg className="sidebar-item-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0h4m-4 0H6m4 0h6m6 0h-2.586a1 1 0 00-.707.293l-1.414 1.414a1 1 0 01-.707.293h-2.172a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 006.586 6H4m12 6h-4m4 3h-4m4 3h-4m-4-3H4m4 0h4" /></svg>;
@@ -1250,8 +1224,6 @@
         const IconMenu = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: '20px', height: '20px'}}><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>;
         const IconClose = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{width: '20px', height: '20px'}}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>;
         
-        // --- کامپوننت‌های صفحات ---
-
         function CoursesPage({ courses, setCourses, studyActivities, setStudyActivities, studyRecords, showNotification }) {
             const [activeTab, setActiveTab] = useState('courses');
             const [newCourseName, setNewCourseName] = useState('');
@@ -1371,10 +1343,10 @@
 
             const initialFormState = {
                 title: '',
-                type: 'study', // 'study' or 'test'
-                course: 'all', // 'all' or specific course name
+                type: 'study', 
+                course: 'all', 
                 target: 10,
-                period: 'weekly', // 'weekly', 'monthly', 'total'
+                period: 'weekly', 
             };
             const [formState, setFormState] = useState(initialFormState);
 
@@ -1434,17 +1406,6 @@
             const calculateProgress = (goal) => {
                 const now = new Date();
                 let recordsToConsider;
-                let startDate;
-                
-                if (goal.period === 'weekly') {
-                    const { start } = getDateRange(now, 'weekly');
-                    startDate = start;
-                } else if (goal.period === 'monthly') {
-                    const { start } = getDateRange(now, 'monthly');
-                    startDate = start;
-                } else { // total
-                    startDate = new Date(goal.createdAt);
-                }
                 
                 if (goal.type === 'study') {
                     recordsToConsider = studyRecords;
@@ -1452,16 +1413,28 @@
                     recordsToConsider = testRecords;
                 }
 
-                let filteredRecords = recordsToConsider.filter(r => new Date(r.timestamp) >= startDate);
+                let filteredRecords = recordsToConsider;
                 if (goal.course !== 'all') {
                     filteredRecords = filteredRecords.filter(r => r.course === goal.course);
                 }
                 
+                if (goal.period === 'total') {
+                    const createdAtDate = new Date(goal.createdAt);
+                    createdAtDate.setHours(0,0,0,0);
+                    const shamsiStart = getShamsiDateString(createdAtDate);
+                    filteredRecords = filteredRecords.filter(r => r.date >= shamsiStart);
+                } else { 
+                    const { start, end } = getDateRange(now, goal.period);
+                    const shamsiStart = getShamsiDateString(start);
+                    const shamsiEnd = getShamsiDateString(end);
+                    filteredRecords = filteredRecords.filter(r => r.date >= shamsiStart && r.date <= shamsiEnd);
+                }
+                
                 let current = 0;
                 if (goal.type === 'study') {
-                    current = filteredRecords.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0); // current in minutes
-                    current = current / 60; // convert to hours to match target
-                } else { // test
+                    current = filteredRecords.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0); 
+                    current = current / 60; 
+                } else { 
                     current = filteredRecords.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
                 }
 
@@ -1681,31 +1654,32 @@
             const calculateProgress = (goal) => {
                 const now = new Date();
                 let recordsToConsider;
-                let startDate;
                 
-                if (goal.period === 'weekly') {
-                    const { start } = getDateRange(now, 'weekly');
-                    startDate = start;
-                } else {
-                    return { progress: 0, current: 0 }; // Only show weekly goals on homepage
+                if (goal.period !== 'weekly') {
+                    return { progress: 0, current: 0 }; 
                 }
-                
+
                 if (goal.type === 'study') {
                     recordsToConsider = studyRecords;
                 } else {
                     recordsToConsider = testRecords;
                 }
 
-                let filteredRecords = recordsToConsider.filter(r => new Date(r.timestamp) >= startDate);
+                let filteredRecords = recordsToConsider;
                 if (goal.course !== 'all') {
                     filteredRecords = filteredRecords.filter(r => r.course === goal.course);
                 }
                 
+                const { start, end } = getDateRange(now, 'weekly');
+                const shamsiStart = getShamsiDateString(start);
+                const shamsiEnd = getShamsiDateString(end);
+                filteredRecords = filteredRecords.filter(r => r.date >= shamsiStart && r.date <= shamsiEnd);
+                
                 let current = 0;
                 if (goal.type === 'study') {
-                    current = filteredRecords.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0); // current in minutes
-                    current = current / 60; // convert to hours to match target
-                } else { // test
+                    current = filteredRecords.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0); 
+                    current = current / 60; 
+                } else { 
                     current = filteredRecords.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
                 }
 
@@ -1749,11 +1723,7 @@
             const calculateDaysToNowruz = () => {
                 const now = new Date();
                 const currentYear = now.getFullYear();
-                let nowruzDate = new Date(currentYear, 2, 21); // March 21st as an approximation
-                
-                // A more accurate Nowruz calculation is complex, this is a good estimate.
-                // For a more precise Persian calendar conversion, one would need a library.
-                // Let's assume the user is using the Gregorian year.
+                let nowruzDate = new Date(currentYear, 2, 21); 
                 
                 if (now > nowruzDate) {
                     nowruzDate = new Date(currentYear + 1, 2, 21);
@@ -1769,7 +1739,6 @@
             const allRecords = [...studyRecords, ...testRecords];
             const uniqueDays = [...new Set(allRecords.map(r => r.date))];
             
-            // Calculate total days from first record to today
             let firstDate = new Date();
             if (allRecords.length > 0) {
                  firstDate = allRecords.reduce((earliest, r) => {
@@ -1785,7 +1754,6 @@
             const dailyAvgHours = Math.floor(dailyAvgMinutes / 60);
             const dailyAvgRemainingMinutes = Math.round(dailyAvgMinutes % 60);
 
-            // گرد کردن میانگین تست‌ها به نزدیک‌ترین عدد صحیح
             const dailyAvgTests = Math.round(totalTestCount / totalDaysElapsed);
             const targetTestCount = 50000;
             const testsRemaining = targetTestCount > totalTestCount ? targetTestCount - totalTestCount : 0;
@@ -1793,9 +1761,9 @@
             
             const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
             const dayIndex = today.getDay();
-            const persianDayIndex = dayIndex === 6 ? 0 : dayIndex + 1; // 6 = Friday -> 0 = شنبه
+            const persianDayIndex = dayIndex === 6 ? 0 : dayIndex + 1; 
             const currentDay = days[persianDayIndex];
-            const daysToNowruz = calculateDaysToNowruz(); // This is an approximation
+            const daysToNowruz = calculateDaysToNowruz(); 
 
             return (
                 <div style={{ position: 'relative', width: '100%', marginBottom: '25px' }}>
@@ -1807,7 +1775,6 @@
                                     {currentDay}، {getTodayShamsiDate()}
                                 </p>
                                 <p style={{ margin: '0', fontSize: '0.9rem', opacity: '0.7' }}>
-                                    {/* {daysToNowruz} روز تا ۱ فروردین  */}
                                 </p>
                             </div>
                             {streak > 0 && (
@@ -1835,7 +1802,6 @@
                                     <div style={{ fontSize: '0.8rem', opacity: '0.8', marginTop: '5px' }}>میانگین مطالعه روزانه</div>
                                 </div>
                                 <div style={{ background: 'rgba(255, 255, 255, 0.05)', borderRadius: '15px', padding: '15px', border: '1px solid rgba(255,255,255,0.1)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
-                                    {/* --- FIX: .toFixed(1) removed --- */}
                                     <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{dailyAvgTests}</div>
                                     <div style={{ fontSize: '0.8rem', opacity: '0.8', marginTop: '5px' }}>میانگین تست روزانه</div>
                                 </div>
@@ -1893,9 +1859,21 @@
                 
                 return { ...stats, dailyAvgMinutes, dailyAvgTests };
             };
+            
+            const getTodayStats = () => {
+                const todayShamsi = getTodayShamsiDate();
+                const todayStudy = studyRecords.filter(r => r.date === todayShamsi);
+                const todayTests = testRecords.filter(r => r.date === todayShamsi);
+                
+                const totalMinutes = todayStudy.reduce((sum, r) => sum + (r.hours * 60) + r.minutes, 0);
+                const totalTests = todayTests.reduce((sum, r) => sum + (r.correct || 0) + (r.incorrect || 0) + (r.unanswered || 0), 0);
+                
+                return { totalMinutes, totalTests };
+            };
 
             const last7DaysStats = calculateDaysStats(7);
             const last30DaysStats = calculateDaysStats(30);
+            const todayStats = getTodayStats();
 
             const formatAvgMinutes = (minutes) => {
                 const h = Math.floor(minutes / 60);
@@ -1905,6 +1883,24 @@
 
             return (
                 <div>
+                    <OverallStatsSummary studyRecords={studyRecords} testRecords={testRecords} streak={streak} />
+                    
+                    <div className="card" style={{marginBottom: '25px'}}>
+                        <h2 style={{ fontSize: '1.4rem', color: 'var(--primary-color)', marginBottom: '20px', textAlign: 'center' }}>آمار امروز ({getTodayShamsiDate()})</h2>
+                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', textAlign: 'center' }}>
+                            <div>
+                                <div className="stat-value">{formatMinutes(todayStats.totalMinutes)}</div>
+                                <div className="stat-label">مجموع مطالعه</div>
+                            </div>
+                            <div>
+                                <div className="stat-value">{todayStats.totalTests.toLocaleString()}</div>
+                                <div className="stat-label">مجموع تست</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <GoalTrackerCard goals={goals} studyRecords={studyRecords} testRecords={testRecords} />
+
                     <div className="home-grid home-grid-full-width">
                          <div className="card">
                             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px'}}>
@@ -1934,8 +1930,6 @@
                             )}
                         </div>
                     </div>
-                
-                    <GoalTrackerCard goals={goals} studyRecords={studyRecords} testRecords={testRecords} />
 
                     <div className="home-grid">
                         <div className="card">
@@ -1981,8 +1975,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <OverallStatsSummary studyRecords={studyRecords} testRecords={testRecords} streak={streak} />
                 </div>
             );
         }
@@ -2025,7 +2017,7 @@
                         hours,
                         minutes,
                         id: Date.now(),
-                        timestamp: new Date().toISOString() // timestamp برای سازگاری با کدهای قدیمی‌تر نگه داشته شده
+                        timestamp: new Date().toISOString() 
                     }]);
                     showNotification('ساعت مطالعه با موفقیت ثبت شد');
                 } else if (formType === 'test') {
@@ -2044,7 +2036,7 @@
                         incorrect,
                         unanswered,
                         id: Date.now(),
-                        timestamp: new Date().toISOString() // timestamp برای سازگاری
+                        timestamp: new Date().toISOString() 
                     }]);
                     showNotification('آمار تست با موفقیت ثبت شد');
                 }
@@ -2138,13 +2130,12 @@
           );
         }
         
-        // ==================================================
-        // کامپوننت جدید و بازطراحی شده صفحه آمار
-        // ==================================================
         function StatsPage({ studyRecords, testRecords, courses, goals, isDarkMode }) {
             const [timeRange, setTimeRange] = useState('weekly');
             const [currentDate, setCurrentDate] = useState(new Date());
             const [activeTab, setActiveTab] = useState('overview');
+            const [selectedCourse, setSelectedCourse] = useState('all');
+            const [lessonStats, setLessonStats] = useState(null);
 
             const chartInstances = useRef({});
             
@@ -2161,6 +2152,13 @@
                 setDateRange(getDateRange(currentDate, timeRange));
             }, [currentDate, timeRange]);
             
+            useEffect(() => {
+                if (activeTab === 'lesson') {
+                    const stats = calculatePeriodStatsShamsi(studyRecords, testRecords, dateRange.start, dateRange.end, selectedCourse);
+                    setLessonStats(stats);
+                }
+            }, [activeTab, selectedCourse, dateRange, studyRecords, testRecords]);
+            
             const renderCharts = useCallback(() => {
                 destroyCharts();
                 
@@ -2174,10 +2172,6 @@
                 Chart.defaults.font.family = 'Vazirmatn';
                 Chart.defaults.borderColor = !isDarkMode ? '#E5E5E5' : '#333333';
 
-                // --- FIX: رکوردها دیگر در سطح بالا فیلتر نمی‌شوند ---
-                // const filteredStudyRecords = studyRecords.filter(...);
-                // const filteredTestRecords = testRecords.filter(...);
-
                 let barLabels = [];
                 const dailyData = {}; 
                 const orderedKeys = [];
@@ -2187,20 +2181,17 @@
                     for (let i = 0; i < 7; i++) {
                         const date = new Date(dateRange.start);
                         date.setDate(date.getDate() + i);
-                        // --- FIX: استفاده از فرمت استاندارد شمسی ---
                         const formattedDate = getShamsiDateString(date);
                         dailyData[formattedDate] = { study: 0, test: 0 };
                         orderedKeys.push(formattedDate);
                     }
-                } else { // Monthly view
+                } else { 
                     const daysInMonth = dateRange.end.getDate();
-                    barLabels = []; // --- FIX: برچسب‌ها اینجا پر می‌شوند ---
+                    barLabels = []; 
                     for (let i = 0; i < daysInMonth; i++) {
                         const date = new Date(dateRange.start);
                         date.setDate(date.getDate() + i);
-                        // --- FIX: استفاده از فرمت استاندارد شمسی ---
                         const formattedDate = getShamsiDateString(date);
-                        // --- FIX: استخراج روز شمسی برای برچسب ---
                         const shamsiDay = formattedDate.split('/')[2];
                         barLabels.push(shamsiDay);
                         dailyData[formattedDate] = { study: 0, test: 0 };
@@ -2208,16 +2199,15 @@
                     }
                 }
 
-                // --- FIX: فیلتر کردن و تجمیع بر اساس 'record.date' ---
                 studyRecords.forEach(record => {
-                    const recordDate = record.date; // استفاده از تاریخ شمسی ذخیره شده
-                    if (dailyData.hasOwnProperty(recordDate)) { // بررسی اینکه آیا تاریخ در بازه انتخابی ما هست
+                    const recordDate = record.date; 
+                    if (dailyData.hasOwnProperty(recordDate)) { 
                         dailyData[recordDate].study += (record.hours + record.minutes / 60);
                     }
                 });
                 testRecords.forEach(record => {
-                    const recordDate = record.date; // استفاده از تاریخ شمسی ذخیره شده
-                    if (dailyData.hasOwnProperty(recordDate)) { // بررسی اینکه آیا تاریخ در بازه انتخابی ما هست
+                    const recordDate = record.date; 
+                    if (dailyData.hasOwnProperty(recordDate)) { 
                         dailyData[recordDate].test += (record.correct || 0) + (record.incorrect || 0) + (record.unanswered || 0);
                     }
                 });
@@ -2225,150 +2215,213 @@
                 const studyValues = orderedKeys.map(key => (dailyData[key]?.study || 0).toFixed(2));
                 const testValues = orderedKeys.map(key => dailyData[key]?.test || 0);
 
-                // 1. نمودار میله‌ای مطالعه (تب Overview)
-                const studyBarCtx = document.getElementById('studyBarChart')?.getContext('2d');
-                if(studyBarCtx) {
-                    chartInstances.current.studyBar = new Chart(studyBarCtx, {
-                        type: 'bar',
-                        data: { labels: barLabels, datasets: [{ label: 'ساعت مطالعه (ساعت)', data: studyValues, backgroundColor: primaryColor, borderRadius: 4, }] },
-                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { reverse: true } } }
-                    });
-                }
+                if (activeTab === 'overview') {
+                    const studyBarCtx = document.getElementById('studyBarChart')?.getContext('2d');
+                    if(studyBarCtx) {
+                        chartInstances.current.studyBar = new Chart(studyBarCtx, {
+                            type: 'bar',
+                            data: { labels: barLabels, datasets: [{ label: 'ساعت مطالعه (ساعت)', data: studyValues, backgroundColor: primaryColor, borderRadius: 4, }] },
+                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { reverse: true } } }
+                        });
+                    }
 
-                // 2. نمودار میله‌ای تست (تب Overview)
-                const testBarCtx = document.getElementById('testBarChart')?.getContext('2d');
-                if(testBarCtx) {
-                    chartInstances.current.testBar = new Chart(testBarCtx, {
-                        type: 'bar',
-                        data: { labels: barLabels, datasets: [{ label: 'تعداد تست', data: testValues, backgroundColor: secondaryColor, borderRadius: 4, }] },
-                        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { reverse: true } } }
-                    });
+                    const testBarCtx = document.getElementById('testBarChart')?.getContext('2d');
+                    if(testBarCtx) {
+                        chartInstances.current.testBar = new Chart(testBarCtx, {
+                            type: 'bar',
+                            data: { labels: barLabels, datasets: [{ label: 'تعداد تست', data: testValues, backgroundColor: secondaryColor, borderRadius: 4, }] },
+                            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { reverse: true } } }
+                        });
+                    }
                 }
                 
-                // 3. نمودار ترکیبی (تب Trends)
-                const combinedCtx = document.getElementById('combinedStudyTestChart')?.getContext('2d');
-                if(combinedCtx) {
-                    chartInstances.current.combined = new Chart(combinedCtx, {
-                        type: 'bar',
-                        data: {
-                            labels: barLabels,
-                            datasets: [
-                                {
-                                    label: 'ساعت مطالعه',
-                                    data: studyValues,
-                                    backgroundColor: primaryColor + '90', // A bit transparent
-                                    borderColor: primaryColor,
-                                    yAxisID: 'yStudy',
-                                    order: 2
-                                },
-                                {
-                                    label: 'تعداد تست',
-                                    data: testValues,
-                                    type: 'line',
-                                    borderColor: secondaryColor,
-                                    backgroundColor: secondaryColor,
-                                    tension: 0.3,
-                                    yAxisID: 'yTest',
-                                    order: 1
+                if (activeTab === 'trends') {
+                    const combinedCtx = document.getElementById('combinedStudyTestChart')?.getContext('2d');
+                    if(combinedCtx) {
+                        chartInstances.current.combined = new Chart(combinedCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: barLabels,
+                                datasets: [
+                                    {
+                                        label: 'ساعت مطالعه',
+                                        data: studyValues,
+                                        backgroundColor: primaryColor + '90', 
+                                        borderColor: primaryColor,
+                                        yAxisID: 'yStudy',
+                                        order: 2
+                                    },
+                                    {
+                                        label: 'تعداد تست',
+                                        data: testValues,
+                                        type: 'line',
+                                        borderColor: secondaryColor,
+                                        backgroundColor: secondaryColor,
+                                        tension: 0.3,
+                                        yAxisID: 'yTest',
+                                        order: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { position: 'top' } },
+                                scales: {
+                                    yStudy: {
+                                        type: 'linear',
+                                        position: 'right',
+                                        beginAtZero: true,
+                                        title: { display: true, text: 'ساعت مطالعه' }
+                                    },
+                                    yTest: {
+                                        type: 'linear',
+                                        position: 'left',
+                                        beginAtZero: true,
+                                        title: { display: true, text: 'تعداد تست' },
+                                        grid: { drawOnChartArea: false } 
+                                    },
+                                    x: { reverse: true }
                                 }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: { legend: { position: 'top' } },
-                            scales: {
-                                yStudy: {
-                                    type: 'linear',
-                                    position: 'right',
-                                    beginAtZero: true,
-                                    title: { display: true, text: 'ساعت مطالعه' }
-                                },
-                                yTest: {
-                                    type: 'linear',
-                                    position: 'left',
-                                    beginAtZero: true,
-                                    title: { display: true, text: 'تعداد تست' },
-                                    grid: { drawOnChartArea: false } // Only one grid
-                                },
-                                x: { reverse: true }
                             }
+                        });
+                    }
+                    
+                    const courseStudyMinutes = {};
+                    studyRecords.forEach(record => {
+                        courseStudyMinutes[record.course] = (courseStudyMinutes[record.course] || 0) + record.hours * 60 + record.minutes;
+                    });
+                    const courseTests = {};
+                    testRecords.forEach(record => {
+                        courseTests[record.course] = (courseTests[record.course] || 0) + (record.correct || 0) + (record.incorrect || 0) + (record.unanswered || 0);
+                    });
+                    const activityMinutes = {};
+                    studyRecords.forEach(record => {
+                        const totalMins = record.hours * 60 + record.minutes;
+                        activityMinutes[record.activityType] = (activityMinutes[record.activityType] || 0) + totalMins;
+                    });
+                    const totalCorrectAllTime = testRecords.reduce((sum, r) => sum + (r.correct || 0), 0);
+                    const totalIncorrectAllTime = testRecords.reduce((sum, r) => sum + (r.incorrect || 0), 0);
+                    const totalUnansweredAllTime = testRecords.reduce((sum, r) => sum + (r.unanswered || 0), 0);
+
+                    const pieOptions = { responsive: true, plugins: { legend: { position: 'bottom', labels: { padding: 10 } } } };
+                    const pieColors = Object.keys(courseStudyMinutes).map(label => courses.find(c => c.name === label)?.color || getRandomColor());
+                    const activityColors = [primaryColor, secondaryColor, yellowColor, getComputedStyle(document.documentElement).getPropertyValue('--chart-color-5').trim(), getComputedStyle(document.documentElement).getPropertyValue('--chart-color-6').trim()];
+
+                    const studyPieCtx = document.getElementById('studyPieChart')?.getContext('2d');
+                    if(studyPieCtx) {
+                        chartInstances.current.studyPie = new Chart(studyPieCtx, {
+                            type: 'pie',
+                            data: { labels: Object.keys(courseStudyMinutes), datasets: [{ data: Object.values(courseStudyMinutes), backgroundColor: pieColors, hoverOffset: 4 }] },
+                            options: pieOptions
+                        });
+                    }
+
+                    const testPieCtx = document.getElementById('testPieChart')?.getContext('2d');
+                    if(testPieCtx) {
+                        chartInstances.current.testPie = new Chart(testPieCtx, {
+                            type: 'pie',
+                            data: { labels: Object.keys(courseTests), datasets: [{ data: Object.values(courseTests), backgroundColor: pieColors, hoverOffset: 4 }] },
+                            options: pieOptions
+                        });
+                    }
+                    
+                    const activityPieCtx = document.getElementById('activityPieChart')?.getContext('2d');
+                    if(activityPieCtx) {
+                        chartInstances.current.activityPie = new Chart(activityPieCtx, {
+                            type: 'doughnut',
+                            data: { labels: Object.keys(activityMinutes), datasets: [{ data: Object.values(activityMinutes), backgroundColor: activityColors, hoverOffset: 4 }] },
+                            options: pieOptions
+                        });
+                    }
+
+                    const testBreakdownCtx = document.getElementById('testBreakdownPieChart')?.getContext('2d');
+                    if(testBreakdownCtx) {
+                        chartInstances.current.testBreakdown = new Chart(testBreakdownCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['صحیح', 'غلط', 'نزده'],
+                                datasets: [{
+                                    data: [totalCorrectAllTime, totalIncorrectAllTime, totalUnansweredAllTime],
+                                    backgroundColor: [primaryColor, redColor, yellowColor],
+                                    hoverOffset: 4
+                                }]
+                            },
+                            options: pieOptions
+                        });
+                    }
+                }
+                
+                if (activeTab === 'lesson') {
+                    const dailyDataLesson = {};
+                    const orderedKeysLesson = [];
+                    
+                    if (timeRange === 'weekly') {
+                        for (let i = 0; i < 7; i++) {
+                            const date = new Date(dateRange.start);
+                            date.setDate(date.getDate() + i);
+                            const formattedDate = getShamsiDateString(date);
+                            dailyDataLesson[formattedDate] = { study: 0, test: 0 };
+                            orderedKeysLesson.push(formattedDate);
+                        }
+                    } else { 
+                        const daysInMonth = dateRange.end.getDate();
+                        for (let i = 0; i < daysInMonth; i++) {
+                            const date = new Date(dateRange.start);
+                            date.setDate(date.getDate() + i);
+                            const formattedDate = getShamsiDateString(date);
+                            dailyDataLesson[formattedDate] = { study: 0, test: 0 };
+                            orderedKeysLesson.push(formattedDate);
+                        }
+                    }
+
+                    studyRecords.forEach(record => {
+                        if (selectedCourse !== 'all' && record.course !== selectedCourse) return;
+                        const recordDate = record.date; 
+                        if (dailyDataLesson.hasOwnProperty(recordDate)) { 
+                            dailyDataLesson[recordDate].study += (record.hours + record.minutes / 60);
                         }
                     });
-                }
-                
-                // 4. نمودارهای دایره‌ای (تب Trends)
-                // --- FIX: این آمارها باید بر اساس کل رکوردها باشند، نه رکوردهای فیلتر شده بر اساس timestamp ---
-                // (کد موجود از قبل کل رکوردها را پردازش می‌کرد، پس این بخش درست است)
-                const courseStudyMinutes = {};
-                studyRecords.forEach(record => {
-                    courseStudyMinutes[record.course] = (courseStudyMinutes[record.course] || 0) + record.hours * 60 + record.minutes;
-                });
-                const courseTests = {};
-                testRecords.forEach(record => {
-                    courseTests[record.course] = (courseTests[record.course] || 0) + (record.correct || 0) + (record.incorrect || 0) + (record.unanswered || 0);
-                });
-                const activityMinutes = {};
-                studyRecords.forEach(record => {
-                    const totalMins = record.hours * 60 + record.minutes;
-                    activityMinutes[record.activityType] = (activityMinutes[record.activityType] || 0) + totalMins;
-                });
-                const totalCorrectAllTime = testRecords.reduce((sum, r) => sum + (r.correct || 0), 0);
-                const totalIncorrectAllTime = testRecords.reduce((sum, r) => sum + (r.incorrect || 0), 0);
-                const totalUnansweredAllTime = testRecords.reduce((sum, r) => sum + (r.unanswered || 0), 0);
-
-                const pieOptions = { responsive: true, plugins: { legend: { position: 'bottom', labels: { padding: 10 } } } };
-                const pieColors = Object.keys(courseStudyMinutes).map(label => courses.find(c => c.name === label)?.color || getRandomColor());
-                const activityColors = [primaryColor, secondaryColor, yellowColor, getComputedStyle(document.documentElement).getPropertyValue('--chart-color-5').trim(), getComputedStyle(document.documentElement).getPropertyValue('--chart-color-6').trim()];
-
-                const studyPieCtx = document.getElementById('studyPieChart')?.getContext('2d');
-                if(studyPieCtx) {
-                    chartInstances.current.studyPie = new Chart(studyPieCtx, {
-                        type: 'pie',
-                        data: { labels: Object.keys(courseStudyMinutes), datasets: [{ data: Object.values(courseStudyMinutes), backgroundColor: pieColors, hoverOffset: 4 }] },
-                        options: pieOptions
+                    testRecords.forEach(record => {
+                        if (selectedCourse !== 'all' && record.course !== selectedCourse) return;
+                        const recordDate = record.date; 
+                        if (dailyDataLesson.hasOwnProperty(recordDate)) { 
+                            dailyDataLesson[recordDate].test += (record.correct || 0) + (record.incorrect || 0) + (record.unanswered || 0);
+                        }
                     });
+                    
+                    const lessonStudyValues = orderedKeysLesson.map(key => (dailyDataLesson[key]?.study || 0).toFixed(2));
+                    const lessonTestValues = orderedKeysLesson.map(key => dailyDataLesson[key]?.test || 0);
+                    
+                    const lessonBarCtx = document.getElementById('lessonBarChart')?.getContext('2d');
+                    if(lessonBarCtx) {
+                        chartInstances.current.lessonBar = new Chart(lessonBarCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: barLabels,
+                                datasets: [
+                                    { label: 'ساعت مطالعه', data: lessonStudyValues, backgroundColor: primaryColor, borderRadius: 4, yAxisID: 'yStudy' },
+                                    { label: 'تعداد تست', data: lessonTestValues, backgroundColor: secondaryColor, borderRadius: 4, yAxisID: 'yTest' }
+                                ]
+                            },
+                            options: { 
+                                responsive: true, 
+                                plugins: { legend: { position: 'top' } }, 
+                                scales: { 
+                                    yStudy: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'ساعت' } },
+                                    yTest: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'تست' }, grid: { drawOnChartArea: false } },
+                                    x: { reverse: true } 
+                                } 
+                            }
+                        });
+                    }
                 }
 
-                const testPieCtx = document.getElementById('testPieChart')?.getContext('2d');
-                if(testPieCtx) {
-                    chartInstances.current.testPie = new Chart(testPieCtx, {
-                        type: 'pie',
-                        data: { labels: Object.keys(courseTests), datasets: [{ data: Object.values(courseTests), backgroundColor: pieColors, hoverOffset: 4 }] },
-                        options: pieOptions
-                    });
-                }
-                
-                const activityPieCtx = document.getElementById('activityPieChart')?.getContext('2d');
-                if(activityPieCtx) {
-                    chartInstances.current.activityPie = new Chart(activityPieCtx, {
-                        type: 'doughnut',
-                        data: { labels: Object.keys(activityMinutes), datasets: [{ data: Object.values(activityMinutes), backgroundColor: activityColors, hoverOffset: 4 }] },
-                        options: pieOptions
-                    });
-                }
-
-                const testBreakdownCtx = document.getElementById('testBreakdownPieChart')?.getContext('2d');
-                if(testBreakdownCtx) {
-                    chartInstances.current.testBreakdown = new Chart(testBreakdownCtx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: ['صحیح', 'غلط', 'نزده'],
-                            datasets: [{
-                                data: [totalCorrectAllTime, totalIncorrectAllTime, totalUnansweredAllTime],
-                                backgroundColor: [primaryColor, redColor, yellowColor],
-                                hoverOffset: 4
-                            }]
-                        },
-                        options: pieOptions
-                    });
-                }
-
-            }, [studyRecords, testRecords, dateRange, courses, timeRange, isDarkMode]);
+            }, [studyRecords, testRecords, dateRange, courses, timeRange, isDarkMode, activeTab, selectedCourse]);
             
             useEffect(() => {
                 renderCharts();
                 return () => destroyCharts();
-            }, [renderCharts, isDarkMode, activeTab]); // Re-render if tab changes (to mount new canvases)
+            }, [renderCharts, isDarkMode, activeTab]); 
 
             const changeDate = (direction) => {
                 const newDate = new Date(currentDate);
@@ -2380,17 +2433,14 @@
                 setCurrentDate(newDate);
             };
             
-            // --- FIX: اطمینان از اینکه dateLabel از فرمت شمسی 'fa-IR' استفاده می‌کند ---
             const dateLabel = timeRange === 'weekly' 
                 ? `${dateRange.start.toLocaleDateString('fa-IR')} تا ${dateRange.end.toLocaleDateString('fa-IR')}`
                 : currentDate.toLocaleDateString('fa-IR', { month: 'long', year: 'numeric' });
 
-            // --- FIX: محاسبه آمار دوره فعلی باید بر اساس تاریخ شمسی باشد ---
             const currentPeriodStats = calculatePeriodStatsShamsi(studyRecords, testRecords, dateRange.start, dateRange.end);
             const numDays = (dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24) + 1;
             const dailyAvgMinutes = currentPeriodStats.totalMinutes / numDays;
             
-            // آمار دوره قبلی
             const prevStartDate = new Date(dateRange.start);
             if (timeRange === 'weekly') {
                 prevStartDate.setDate(prevStartDate.getDate() - 7);
@@ -2399,6 +2449,8 @@
             }
             const prevDateRange = getDateRange(prevStartDate, timeRange);
             const prevPeriodStats = calculatePeriodStatsShamsi(studyRecords, testRecords, prevDateRange.start, prevDateRange.end);
+            
+            const activeCourses = courses.filter(c => !c.isArchived);
 
             return (
                 <div>
@@ -2420,17 +2472,14 @@
                         <button className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>نمای کلی</button>
                         <button className={`tab-button ${activeTab === 'trends' ? 'active' : ''}`} onClick={() => setActiveTab('trends')}>روندها و تفکیک</button>
                         <button className={`tab-button ${activeTab === 'comparison' ? 'active' : ''}`} onClick={() => setActiveTab('comparison')}>مقایسه</button>
+                        <button className={`tab-button ${activeTab === 'lesson' ? 'active' : ''}`} onClick={() => setActiveTab('lesson')}>تحلیل درس</button>
                     </div>
 
                     <div className="tab-content">
-                        {/* --- Tab: Overview --- */}
                         {activeTab === 'overview' && (
                             <div>
                                 <div className="card" style={{ marginBottom: '20px' }}>
                                     <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>شاخص‌های کلیدی {timeRange === 'weekly' ? 'هفته' : 'ماه'}</h2>
-                                    {/* <p style={{textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '-15px'}}>
-                                        (توجه: این بخش بر اساس timestamp کار می‌کند و ممکن است با نمودارهای روزانه که بر اساس تاریخ شمسی هستند متفاوت باشد)
-                                    </p> */}
                                     <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
                                         <div className="stat-card">
                                             <div className="stat-value">{formatMinutes(currentPeriodStats.totalMinutes)}</div>
@@ -2441,7 +2490,6 @@
                                             <div className="stat-label">مجموع تست</div>
                                         </div>
                                         <div className="stat-card">
-                                            {/* --- FIX: formatMinutes اکنون گرد می‌کند --- */}
                                             <div className="stat-value">{formatMinutes(dailyAvgMinutes)}</div>
                                             <div className="stat-label">میانگین روزانه</div>
                                         </div>
@@ -2473,7 +2521,6 @@
                             </div>
                         )}
 
-                        {/* --- Tab: Trends & Breakdown --- */}
                         {activeTab === 'trends' && (
                             <div>
                                 <div className="card" style={{ marginBottom: '20px' }}>
@@ -2504,7 +2551,6 @@
                             </div>
                         )}
 
-                        {/* --- Tab: Comparison --- */}
                         {activeTab === 'comparison' && (
                             <div className="card">
                                 <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>مقایسه با دوره قبل (بر اساس تاریخ شمسی)</h2>
@@ -2536,12 +2582,60 @@
                                 </div>
                             </div>
                         )}
+                        
+                        {activeTab === 'lesson' && (
+                            <div>
+                                <div className="card" style={{ marginBottom: '20px' }}>
+                                    <div className="form-group" style={{maxWidth: '400px', margin: '0 auto 20px auto'}}>
+                                        <label style={{textAlign: 'center'}}>انتخاب درس برای تحلیل</label>
+                                        <select value={selectedCourse} onChange={e => setSelectedCourse(e.target.value)}>
+                                            <option value="all">همه دروس</option>
+                                            {activeCourses.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                {lessonStats && (
+                                    <div className="card" style={{ marginBottom: '20px' }}>
+                                        <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>
+                                            شاخص‌های کلیدی: {selectedCourse === 'all' ? 'همه دروس' : selectedCourse}
+                                        </h2>
+                                        <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                                            <div className="stat-card">
+                                                <div className="stat-value">{formatMinutes(lessonStats.totalMinutes)}</div>
+                                                <div className="stat-label">مجموع مطالعه</div>
+                                            </div>
+                                            <div className="stat-card">
+                                                <div className="stat-value">{lessonStats.totalTests.toLocaleString()}</div>
+                                                <div className="stat-label">مجموع تست</div>
+                                            </div>
+                                            <div className="stat-card">
+                                                <div className="stat-value" style={{color: 'var(--chart-color-2)'}}>{lessonStats.accuracy.toFixed(1)}%</div>
+                                                <div className="stat-label">درصد دقت تست</div>
+                                            </div>
+                                            <div className="stat-card">
+                                                <div className="stat-value" style={{color: 'var(--chart-color-5)', fontSize: '1.3rem'}}>
+                                                    {lessonStats.peakDay ? `${lessonStats.peakDay.date} (${formatMinutes(lessonStats.peakDay.minutes)})` : '---'}
+                                                </div>
+                                                <div className="stat-label">روز اوج مطالعه</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                <div className="card">
+                                    <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>
+                                        روند روزانه: {selectedCourse === 'all' ? 'همه دروس' : selectedCourse}
+                                    </h2>
+                                    <canvas id="lessonBarChart"></canvas>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             );
         }
         
-        // کامپوننت کمکی برای کارت‌های مقایسه
         const ComparisonMetric = ({ label, current, previous, formatter }) => {
             const change = current - previous;
             const percentChange = previous !== 0 ? (change / previous) * 100 : (current > 0 ? 100 : 0);
@@ -2565,9 +2659,6 @@
         };
 
         
-        // ==================================================
-        // کامپوننت بازطراحی شده مدیریت آمار
-        // ==================================================
         function ManageStatsPage({ studyRecords, setStudyRecords, testRecords, setTestRecords, courses, studyActivities, showNotification }) {
             const [editingRecord, setEditingRecord] = useState(null);
             const [recordToDelete, setRecordToDelete] = useState(null);
@@ -2980,10 +3071,7 @@
             };
             
             const clearAllData = () => {
-                // استفاده از یک پاپ‌آپ ساده به جای window.prompt که ممکن است بلاک شود
                 setNotification('برای تایید حذف، دوباره کلیک کنید.');
-                // این یک تایید ساده است، برای امنیت بیشتر باید از مودال استفاده کرد
-                // اما برای سادگی، یک راه حل موقت
                 const originalClick = document.body.onclick;
                 document.body.onclick = () => {
                     localStorage.clear();
@@ -3026,7 +3114,6 @@
                                 />;
                     case 'schedule':
                         return <SchedulePage courses={courses} weeklySchedule={weeklySchedule} setWeeklySchedule={setWeeklySchedule} studyActivities={studyActivities} showNotification={showNotification} />;
-                    // --- FIX: case 'timer' حذف شد ---
                     case 'goals':
                         return <GoalsPage goals={goals} setGoals={setGoals} studyRecords={studyRecords} testRecords={testRecords} courses={courses} showNotification={showNotification} />;
                     case 'courses':
@@ -3049,10 +3136,8 @@
                 }
             };
 
-            // آیتم‌های سایدبار با آیکون‌های SVG
             const sidebarItems = [
                 { id: 'home', label: 'میز مطالعه', icon: <IconHome /> },
-                // --- FIX: آیتم 'timer' حذف شد ---
                 { divider: true },
                 { id: 'record-stats', label: 'ثبت آمار', icon: <IconRecord /> },
                 { id: 'stats', label: 'مشاهده آمار', icon: <IconStats /> },
@@ -3114,13 +3199,12 @@
         ReactDOM.render(<App />, document.getElementById('app'));
     </script>
     
-    <!-- اسکریپت ثبت Service Worker برای PWA -->
     <script>
         if ('serviceWorker' in navigator) {
             const swContent = `
                 const CACHE_NAME = 'study-manager-cache-v2';
                 const urlsToCache = [
-                    '.', // Alias for index.html
+                    '.', 
                     'https://unpkg.com/react@18/umd/react.production.min.js',
                     'https://unpkg.com/react-dom@18/umd/react-dom.production.min.js',
                     'https://unpkg.com/@babel/standalone/babel.min.js',
@@ -3151,13 +3235,7 @@
                     event.respondWith(
                         caches.match(event.request)
                             .then(response => {
-                                // Cache-First
                                 return response || fetch(event.request).then(fetchResponse => {
-                                    // Optional: Cache new requests dynamically
-                                    // return caches.open(CACHE_NAME).then(cache => {
-                                    //    cache.put(event.request, fetchResponse.clone());
-                                    //    return fetchResponse;
-                                    // });
                                     return fetchResponse;
                                 });
                             })
